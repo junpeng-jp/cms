@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package blocks;
+
+// Block definition
+message Block {
+  oneof kind {
+    // Special Layout Marker Blocks
+    FileStartBlock file_start_block = 1;
+    FileEndBlock file_end_block = 2;
+    RowStartBlock row_start_block = 3;
+    RowEndBlock row_end_block = 4;
+    ColumnStartBlock column_start_block = 5;
+    ColumnEndBlock column_end_block = 6;
+
+    // Content Blocks
+    ContentBlock content_block = 11;
+    CalloutBlock callout_block = 12;
+    CodeBlock code_block = 13;
+    QuoteBlock quote_block = 14;
+    EquationBlock equation_block = 15;
+    DividerBlock divider_block = 16;
+
+    // List Blocks
+    ListBlock list_block = 20;
+    TableOfContentsBlock table_of_contents_block = 21;
+    BreadcrumbBlock breadcrumb_block = 22;
+    TodoListBlock todo_list_block = 23;
+  }
+}
+
+// Special Layout Marker Blocks
+message FileStartBlock {
+  string style = 1;
+  int64 total_rows = 2;
+}
+message FileEndBlock { int64 total_size = 1; }
+
+message RowStartBlock {
+  string style = 1;
+  int64 total_columns = 2;
+}
+message RowEndBlock { int64 total_size = 1; }
+
+message ColumnStartBlock {
+  string style = 1;
+  int64 total_blocks = 2;
+}
+message ColumnEndBlock { int64 total_size = 1; }
+
+// Content Blocks
+message HeaderBlock {
+  string header = 1;
+  repeated Inline caption = 2;
+  repeated Inline content = 3;
+
+  bool collapsible = 4;
+}
+
+message ContentBlock { repeated Inline content = 1; }
+
+message CalloutBlock {
+  string icon = 1;
+  repeated Inline content = 2;
+}
+
+message CodeBlock {
+  repeated Inline caption = 1;
+  string language = 2;
+  repeated string code = 3;
+}
+
+message QuoteBlock { repeated Inline content = 1; }
+
+message EquationBlock { string expression = 1; }
+
+message DividerBlock {}
+
+// Simple list blocks
+message ListBlock { repeated ListItem items = 1; }
+
+message TableOfContentsBlock { repeated ListItem items = 1; }
+
+message ListItem { repeated Inline content = 1; }
+
+message BreadcrumbBlock { repeated Inline inline = 1; }
+
+message TodoListBlock {
+  repeated Inline header = 1;
+  repeated CheckableListItem items = 2;
+}
+
+message CheckableListItem {
+  bool is_checked = 1;
+  repeated Inline content = 2;
+}
+
+// Inline nodes
+message Inline {
+  oneof kind {
+    Text text = 1;
+    Link link = 2;
+    Mention mention = 3;
+    Equation equation = 4;
+    Code code = 5;
+    Image image = 6;
+    EmbeddedImage embedded_image = 7;
+  }
+}
+
+message Text { string unicode = 1; }
+
+message Link {
+  string url = 1;
+  string unicode = 2;
+}
+
+message Mention { string user_id = 1; }
+
+message Equation { string expression = 1; }
+
+message Code { string unicode = 1; }
+
+message Image { string url = 1; }
+
+message EmbeddedImage { string base64 = 1; }
