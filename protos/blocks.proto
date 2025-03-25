@@ -16,7 +16,7 @@ message Block {
     // Content Blocks
     ContentBlock content_block = 11;
     CalloutBlock callout_block = 12;
-    CodeBlock code_block = 13;
+    FencedCodeBlock code_block = 13;
     QuoteBlock quote_block = 14;
     EquationBlock equation_block = 15;
     DividerBlock divider_block = 16;
@@ -64,7 +64,7 @@ message CalloutBlock {
   repeated Inline content = 2;
 }
 
-message CodeBlock {
+message FencedCodeBlock {
   repeated Inline caption = 1;
   string language = 2;
   repeated string code = 3;

@@ -39,3 +39,9 @@ lint: ## run lint on staged changes
 .PHONY: test
 test: ## run unit tests
 	echo "TODO: gotest"
+
+## productionise
+.PHONY: build
+build:
+	go build -ldflags="-s -w" -o build/toolkit cmd/toolkit/*
+	
