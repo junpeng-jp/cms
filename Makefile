@@ -9,23 +9,38 @@ SHELL := bash
 
 ## variables
 GO_MODULE_PREFIX=github.com/junpeng-jp/blog
+GO_CONTENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/pb/contentpb
+GO_DOCUMENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/pb/docpb
+GO_FILE_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/pb/filepb
 
 .PHONY: help
 help:  ## print help message
 	@grep -E '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 ## protbuf
-.PHONY: gen-blocks
-gen-blocks: ## generate the protobuf files used for blocks
+.PHONY: gen-content
+gen-content: ## generate the protobuf files used by the content
 	protoc \
 	--go_out=. \
 	--go-vtproto_out=. \
 	--go_opt=module=${GO_MODULE_PREFIX} \
 	--go-vtproto_opt=module=${GO_MODULE_PREFIX} \
-	--go_opt=Mprotos/blocks.proto=${GO_MODULE_PREFIX}/internal/pb/block \
-	--go-vtproto_opt=Mprotos/blocks.proto=${GO_MODULE_PREFIX}/internal/pb/block \
+	--go_opt=Mprotos/content.proto=${GO_CONTENT_MODULE_PREFIX} \
+	--go-vtproto_opt=Mprotos/content.proto=${GO_CONTENT_MODULE_PREFIX} \
 	--go-vtproto_opt=features=marshal+unmarshal+size \
-	./protos/blocks.proto
+	./protos/content.proto
+
+.PHONY: gen-file
+gen-file: ## generate the protobuf files used for file encoding
+	protoc \
+	--go_out=. \
+	--go-vtproto_out=. \
+	--go_opt=module=${GO_MODULE_PREFIX} \
+	--go-vtproto_opt=module=${GO_MODULE_PREFIX} \
+	--go_opt=Mprotos/file_metadata.proto=${GO_FILE_MODULE_PREFIX} \
+	--go-vtproto_opt=Mprotos/file_metadata.proto=${GO_FILE_MODULE_PREFIX} \
+	--go-vtproto_opt=features=marshal+unmarshal+size \
+	./protos/file_metadata.proto
 
 ## checks
 .PHONY: format

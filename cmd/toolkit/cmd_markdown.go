@@ -16,9 +16,7 @@ const (
 	cmdMarkdownFileNameFlagShortName = "f"
 )
 
-func newGenCommand() *cobra.Command {
-	var fileName string
-
+func newMarkdownCommand() *cobra.Command {
 	md := goldmark.New(
 		goldmark.WithExtensions(extension.GFM),
 		goldmark.WithParserOptions(
@@ -30,13 +28,23 @@ func newGenCommand() *cobra.Command {
 		),
 	)
 
-	cmdMarkdown := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "markdown",
 		Short: "markdown related utilities",
 		Long:  ``,
 	}
 
-	cmdMarkdownParse := &cobra.Command{
+	cmd.AddCommand(
+		newMarkdownParseCommand(md),
+	)
+
+	return cmd
+}
+
+func newMarkdownParseCommand(md goldmark.Markdown) *cobra.Command {
+	var fileName string
+
+	cmd := &cobra.Command{
 		Use:   "parse",
 		Short: "parses markdown using goldmark",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -48,13 +56,9 @@ func newGenCommand() *cobra.Command {
 		},
 	}
 
-	cmdMarkdown.AddCommand(
-		cmdMarkdownParse,
-	)
+	cmd.Flags().StringVarP(&fileName, cmdMarkdownFileNameFlagName, cmdMarkdownFileNameFlagShortName, "", "name of content file")
 
-	cmdMarkdownParse.Flags().StringVarP(&fileName, cmdMarkdownFileNameFlagName, cmdMarkdownFileNameFlagShortName, "", "name of content file")
-
-	return cmdMarkdown
+	return cmd
 }
 
 func parseMardown(parser parser.Parser, markdownBytes []byte) error {
