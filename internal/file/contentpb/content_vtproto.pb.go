@@ -268,9 +268,9 @@ func (m *Text) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Fragment) > 0 {
-		for iNdEx := len(m.Fragment) - 1; iNdEx >= 0; iNdEx-- {
-			size, err := m.Fragment[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
+	if len(m.Fragments) > 0 {
+		for iNdEx := len(m.Fragments) - 1; iNdEx >= 0; iNdEx-- {
+			size, err := m.Fragments[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -313,10 +313,10 @@ func (m *TextFragment) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.String_) > 0 {
-		i -= len(m.String_)
-		copy(dAtA[i:], m.String_)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.String_)))
+	if len(m.Text) > 0 {
+		i -= len(m.Text)
+		copy(dAtA[i:], m.Text)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Text)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -360,10 +360,10 @@ func (m *Link) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.String_) > 0 {
-		i -= len(m.String_)
-		copy(dAtA[i:], m.String_)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.String_)))
+	if len(m.Text) > 0 {
+		i -= len(m.Text)
+		copy(dAtA[i:], m.Text)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Text)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -527,10 +527,10 @@ func (m *Code) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Unicode) > 0 {
-		i -= len(m.Unicode)
-		copy(dAtA[i:], m.Unicode)
-		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Unicode)))
+	if len(m.Text) > 0 {
+		i -= len(m.Text)
+		copy(dAtA[i:], m.Text)
+		i = protohelpers.EncodeVarint(dAtA, i, uint64(len(m.Text)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -736,8 +736,8 @@ func (m *Text) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.Fragment) > 0 {
-		for _, e := range m.Fragment {
+	if len(m.Fragments) > 0 {
+		for _, e := range m.Fragments {
 			l = e.SizeVT()
 			n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
@@ -756,7 +756,7 @@ func (m *TextFragment) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.String_)
+	l = len(m.Text)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -774,7 +774,7 @@ func (m *Link) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
-	l = len(m.String_)
+	l = len(m.Text)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -830,7 +830,7 @@ func (m *Code) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Unicode)
+	l = len(m.Text)
 	if l > 0 {
 		n += 1 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
@@ -1320,7 +1320,7 @@ func (m *Text) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Fragment", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Fragments", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1347,8 +1347,8 @@ func (m *Text) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Fragment = append(m.Fragment, &TextFragment{})
-			if err := m.Fragment[len(m.Fragment)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			m.Fragments = append(m.Fragments, &TextFragment{})
+			if err := m.Fragments[len(m.Fragments)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1437,7 +1437,7 @@ func (m *TextFragment) UnmarshalVT(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field String_", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Text", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1465,7 +1465,7 @@ func (m *TextFragment) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.String_ = string(dAtA[iNdEx:postIndex])
+			m.Text = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1552,7 +1552,7 @@ func (m *Link) UnmarshalVT(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field String_", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Text", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1580,7 +1580,7 @@ func (m *Link) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.String_ = string(dAtA[iNdEx:postIndex])
+			m.Text = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1884,7 +1884,7 @@ func (m *Code) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Unicode", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Text", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1912,7 +1912,7 @@ func (m *Code) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Unicode = string(dAtA[iNdEx:postIndex])
+			m.Text = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

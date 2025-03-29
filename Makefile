@@ -9,9 +9,9 @@ SHELL := bash
 
 ## variables
 GO_MODULE_PREFIX=github.com/junpeng-jp/blog
-GO_CONTENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/pb/contentpb
-GO_DOCUMENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/pb/docpb
-GO_FILE_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/pb/filepb
+GO_CONTENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/contentpb
+GO_DOCUMENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/docpb
+GO_FILE_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/metadatapb
 
 .PHONY: help
 help:  ## print help message
@@ -58,5 +58,5 @@ test: ## run unit tests
 ## productionise
 .PHONY: build
 build:
-	go build -ldflags="-s -w" -o build/toolkit cmd/toolkit/*
+	go build -ldflags="-s -w" -o build/toolkit cmd/toolkit/*.go
 	

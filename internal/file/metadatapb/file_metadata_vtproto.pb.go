@@ -2,7 +2,7 @@
 // protoc-gen-go-vtproto version: v0.6.0
 // source: protos/file_metadata.proto
 
-package filepb
+package metadatapb
 
 import (
 	fmt "fmt"

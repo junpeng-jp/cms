@@ -17,16 +17,14 @@ message Content {
   }
 }
 
-message Text { repeated TextFragment fragment = 1; }
-
-message TextFragment {
-  string annotation = 1;
-  string string = 2;
+message Text {
+  repeated bytes styles = 1;
+  repeated string fragments = 2;
 }
 
 message Link {
   string url = 1;
-  string string = 2;
+  string text = 2;
 }
 
 message EquationBlock { string expression = 1; }
@@ -35,7 +33,7 @@ message Mention { string user_id = 1; }
 
 message Equation { string expression = 1; }
 
-message Code { string unicode = 1; }
+message Code { string text = 1; }
 
 message Image { string url = 1; }
 
