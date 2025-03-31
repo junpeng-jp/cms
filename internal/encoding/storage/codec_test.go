@@ -1,20 +1,20 @@
-package storage
+package v0
 
 import (
 	"testing"
 
 	"github.com/junpeng.ong/blog/internal/file"
-	"github.com/junpeng.ong/blog/internal/file/contentpb"
+	"github.com/junpeng.ong/blog/internal/file/filepb"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStorageCodecIdempotence(t *testing.T) {
 	canonicalFile := &file.File{
-		ContentList: []*contentpb.Content{
+		ContentList: []*filepb.Content{
 			{
-				Kind: &contentpb.Content_Text{
-					Text: &contentpb.Text{
-						Fragments: []*contentpb.TextFragment{
+				Kind: &filepb.Content_Text{
+					Text: &filepb.Text{
+						Fragments: []*filepb.TextFragment{
 							{
 								Annotation: "bold",
 								Text:       "some unicode text",
@@ -28,44 +28,44 @@ func TestStorageCodecIdempotence(t *testing.T) {
 				},
 			},
 			{
-				Kind: &contentpb.Content_Link{
-					Link: &contentpb.Link{
+				Kind: &filepb.Content_Link{
+					Link: &filepb.Link{
 						Url:  "https://google.com",
 						Text: "link to url",
 					},
 				},
 			},
 			{
-				Kind: &contentpb.Content_Mention{
-					Mention: &contentpb.Mention{
+				Kind: &filepb.Content_Mention{
+					Mention: &filepb.Mention{
 						UserId: "my_user",
 					},
 				},
 			},
 			{
-				Kind: &contentpb.Content_Code{
-					Code: &contentpb.Code{
+				Kind: &filepb.Content_Code{
+					Code: &filepb.Code{
 						Text: "let a = 10",
 					},
 				},
 			},
 			{
-				Kind: &contentpb.Content_Equation{
-					Equation: &contentpb.Equation{
+				Kind: &filepb.Content_Equation{
+					Equation: &filepb.Equation{
 						Expression: "a + b",
 					},
 				},
 			},
 			{
-				Kind: &contentpb.Content_Image{
-					Image: &contentpb.Image{
+				Kind: &filepb.Content_Image{
+					Image: &filepb.Image{
 						Url: "https://domain.com/myimage",
 					},
 				},
 			},
 			{
-				Kind: &contentpb.Content_EmbeddedImage{
-					EmbeddedImage: &contentpb.EmbeddedImage{
+				Kind: &filepb.Content_EmbeddedImage{
+					EmbeddedImage: &filepb.EmbeddedImage{
 						Base64: "asdfasdfasdf",
 					},
 				},
@@ -89,11 +89,11 @@ func TestStorageCodecIdempotence(t *testing.T) {
 			name:  "no error: file content list has 1 text",
 			codec: StorageCodec{},
 			in: &file.File{
-				ContentList: []*contentpb.Content{
+				ContentList: []*filepb.Content{
 					{
-						Kind: &contentpb.Content_Text{
-							Text: &contentpb.Text{
-								Fragments: []*contentpb.TextFragment{
+						Kind: &filepb.Content_Text{
+							Text: &filepb.Text{
+								Fragments: []*filepb.TextFragment{
 									{
 										Annotation: "bold",
 										Text:       "some unicode text",
@@ -109,11 +109,11 @@ func TestStorageCodecIdempotence(t *testing.T) {
 				},
 			},
 			want: &file.File{
-				ContentList: []*contentpb.Content{
+				ContentList: []*filepb.Content{
 					{
-						Kind: &contentpb.Content_Text{
-							Text: &contentpb.Text{
-								Fragments: []*contentpb.TextFragment{
+						Kind: &filepb.Content_Text{
+							Text: &filepb.Text{
+								Fragments: []*filepb.TextFragment{
 									{
 										Annotation: "bold",
 										Text:       "some unicode text",
@@ -133,10 +133,10 @@ func TestStorageCodecIdempotence(t *testing.T) {
 			name:  "no error: file content list has 1 text",
 			codec: StorageCodec{},
 			in: &file.File{
-				ContentList: []*contentpb.Content{
+				ContentList: []*filepb.Content{
 					{
-						Kind: &contentpb.Content_Link{
-							Link: &contentpb.Link{
+						Kind: &filepb.Content_Link{
+							Link: &filepb.Link{
 								Url:  "https://google.com",
 								Text: "link to url",
 							},
@@ -145,10 +145,10 @@ func TestStorageCodecIdempotence(t *testing.T) {
 				},
 			},
 			want: &file.File{
-				ContentList: []*contentpb.Content{
+				ContentList: []*filepb.Content{
 					{
-						Kind: &contentpb.Content_Link{
-							Link: &contentpb.Link{
+						Kind: &filepb.Content_Link{
+							Link: &filepb.Link{
 								Url:  "https://google.com",
 								Text: "link to url",
 							},
@@ -161,10 +161,10 @@ func TestStorageCodecIdempotence(t *testing.T) {
 			name:  "no error: file content list is empty array",
 			codec: StorageCodec{},
 			in: &file.File{
-				ContentList: []*contentpb.Content{},
+				ContentList: []*filepb.Content{},
 			},
 			want: &file.File{
-				ContentList: []*contentpb.Content{},
+				ContentList: []*filepb.Content{},
 			},
 		},
 		{
@@ -174,7 +174,7 @@ func TestStorageCodecIdempotence(t *testing.T) {
 				ContentList: nil,
 			},
 			want: &file.File{
-				ContentList: []*contentpb.Content{},
+				ContentList: []*filepb.Content{},
 			},
 		},
 	}

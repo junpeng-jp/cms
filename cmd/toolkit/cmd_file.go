@@ -5,8 +5,7 @@ import (
 	"os"
 
 	"github.com/junpeng.ong/blog/internal/encoding/storage"
-	"github.com/junpeng.ong/blog/internal/file/contentpb"
-	"github.com/junpeng.ong/blog/internal/file/metadatapb"
+	"github.com/junpeng.ong/blog/internal/file/filepb"
 	"github.com/protocolbuffers/protoscope"
 	"github.com/spf13/cobra"
 )
@@ -67,8 +66,8 @@ func newFileDecodeCommand() *cobra.Command {
 			}
 			contentBytes := bNoMarker[footer.ContentStartOffset : int(footer.ContentStartOffset)+contentTotalSize]
 
-			var contentMsg contentpb.Content
-			var footerMsg metadatapb.Footer
+			var contentMsg filepb.Content
+			var footerMsg filepb.Footer
 
 			contentRepr := protoscope.Write(
 				contentBytes,

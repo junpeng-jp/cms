@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/junpeng.ong/blog/internal/file"
-	"github.com/junpeng.ong/blog/internal/file/metadatapb"
+	"github.com/junpeng.ong/blog/internal/file/filepb"
 )
 
 const (
@@ -18,6 +18,10 @@ const (
 	maxFileSize = 4194304 // 4MB
 )
 
+type ContentDecoder func([]byte) error
+
+type ContentEncoder func() ([]byte, error)
+
 type StorageCodec struct{}
 
 func (p *StorageCodec) Decode(b []byte) (*file.File, error) {
@@ -25,35 +29,17 @@ func (p *StorageCodec) Decode(b []byte) (*file.File, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	footerStart, footerEnd := ComputeFooterByteRange(bNoMarker)
-
-	// read the footer to get file metadata
-	footer, err := DecodeFooter(bNoMarker[footerStart:footerEnd])
-	if err != nil {
+	var f filepb.File
+	if err := f.UnmarshalVT(bNoMarker); err != nil {
 		return nil, err
 	}
 
-	// read the content portion of the file
-	n, contentList, err := DecodeContentList(bNoMarker[footer.ContentStartOffset:], footer)
-	if err != nil {
-		return nil, err
-	}
-
-	// read the document portion of the file
-	if int(footer.DocumentStartOffset) != int(footer.ContentStartOffset)+n {
-		// the left offset should be at the start of the document section
-		return nil, nil
-	}
-
-	return &file.File{
-		ContentList: contentList,
-	}, nil
+	return
 }
 
 func (p *StorageCodec) Encode(file *file.File) ([]byte, error) {
 	contentList := file.ContentList
-	contentRange := make([]*metadatapb.ContentRange, len(contentList))
+	contentRange := make([]*filepb.ContentRange, len(contentList))
 
 	var leftOffset int
 	var rightOffset int
@@ -65,7 +51,7 @@ func (p *StorageCodec) Encode(file *file.File) ([]byte, error) {
 		if rightOffset > maxFileSize {
 			return nil, fmt.Errorf("%w: exceeded maximum length of %d by %d when encoding", ErrorFileExceedMaxSize, maxFileSize, rightOffset-maxFileSize)
 		}
-		contentRange[i] = &metadatapb.ContentRange{
+		contentRange[i] = &filepb.ContentRange{
 			Length: 0,
 			Size:   int32(n),
 			Offset: int32(leftOffset),
@@ -73,7 +59,7 @@ func (p *StorageCodec) Encode(file *file.File) ([]byte, error) {
 		leftOffset = rightOffset
 	}
 
-	footer := &metadatapb.Footer{
+	footer := &filepb.Footer{
 		Version:             footerVersion,
 		ContentSize:         int32(rightOffset),
 		ContentStartOffset:  0,

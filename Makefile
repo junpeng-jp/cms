@@ -8,39 +8,33 @@ SHELL := bash
 .DELETE_ON_ERROR:
 
 ## variables
+PROTO_PATH=$(shell cd .. && pwd)/protos
+CONTENT_PROTO=content.proto
+FILEMETADATA_PROTO=file_metadata.proto
+
 GO_MODULE_PREFIX=github.com/junpeng-jp/blog
-GO_CONTENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/contentpb
-GO_DOCUMENT_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/docpb
-GO_FILE_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/metadatapb
+GO_PB_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/filepb
 
 .PHONY: help
 help:  ## print help message
 	@grep -E '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 ## protbuf
-.PHONY: gen-content
-gen-content: ## generate the protobuf files used by the content
+.PHONY: gen-pb
+gen-pb: ## generate the protobuf files used by the content
 	protoc \
 	--go_out=. \
-	--go-vtproto_out=. \
 	--go_opt=module=${GO_MODULE_PREFIX} \
-	--go-vtproto_opt=module=${GO_MODULE_PREFIX} \
-	--go_opt=Mprotos/content.proto=${GO_CONTENT_MODULE_PREFIX} \
-	--go-vtproto_opt=Mprotos/content.proto=${GO_CONTENT_MODULE_PREFIX} \
-	--go-vtproto_opt=features=marshal+unmarshal+size \
-	./protos/content.proto
-
-.PHONY: gen-file
-gen-file: ## generate the protobuf files used for file encoding
-	protoc \
-	--go_out=. \
+	--go_opt=M${CONTENT_PROTO}=${GO_PB_MODULE_PREFIX} \
+	--go_opt=M${FILEMETADATA_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_out=. \
-	--go_opt=module=${GO_MODULE_PREFIX} \
 	--go-vtproto_opt=module=${GO_MODULE_PREFIX} \
-	--go_opt=Mprotos/file_metadata.proto=${GO_FILE_MODULE_PREFIX} \
-	--go-vtproto_opt=Mprotos/file_metadata.proto=${GO_FILE_MODULE_PREFIX} \
+	--go-vtproto_opt=M${CONTENT_PROTO}=${GO_PB_MODULE_PREFIX} \
+	--go-vtproto_opt=M${FILEMETADATA_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_opt=features=marshal+unmarshal+size \
-	./protos/file_metadata.proto
+	--go-vtproto_opt=features=marshal+unmarshal+size \
+	--proto_path=${PROTO_PATH} \
+	${PROTO_PATH}/${CONTENT_PROTO} ${PROTO_PATH}/${FILEMETADATA_PROTO} 
 
 ## checks
 .PHONY: format
@@ -59,4 +53,8 @@ test: ## run unit tests
 .PHONY: build
 build:
 	go build -ldflags="-s -w" -o build/toolkit cmd/toolkit/*.go
+
+.PHONY: build-protoc-gen-tinygo
+build-protoc-gen-tinygo:
+	go build -ldflags="-s -w" -o build/protoc-gen-tinygo cmd/protoc-gen-tinygo/main.go
 	

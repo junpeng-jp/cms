@@ -6,15 +6,15 @@ import (
 
 	"github.com/junpeng.ong/blog/internal/encoding/storage"
 	"github.com/junpeng.ong/blog/internal/file"
-	"github.com/junpeng.ong/blog/internal/file/contentpb"
+	"github.com/junpeng.ong/blog/internal/file/filepb"
 )
 
 var exampleFile = &file.File{
-	ContentList: []*contentpb.Content{
+	ContentList: []*filepb.Content{
 		{
-			Kind: &contentpb.Content_Text{
-				Text: &contentpb.Text{
-					Fragments: []*contentpb.TextFragment{
+			Kind: &filepb.Content_Text{
+				Text: &filepb.Text{
+					Fragments: []*filepb.TextFragment{
 						{
 							Annotation: "",
 							Text:       "",
@@ -24,9 +24,9 @@ var exampleFile = &file.File{
 			},
 		},
 		{
-			Kind: &contentpb.Content_Text{
-				Text: &contentpb.Text{
-					Fragments: []*contentpb.TextFragment{
+			Kind: &filepb.Content_Text{
+				Text: &filepb.Text{
+					Fragments: []*filepb.TextFragment{
 						{
 							Annotation: "",
 							Text:       "a",
@@ -48,9 +48,9 @@ var exampleFile = &file.File{
 			},
 		},
 		{
-			Kind: &contentpb.Content_Text{
-				Text: &contentpb.Text{
-					Fragments: []*contentpb.TextFragment{
+			Kind: &filepb.Content_Text{
+				Text: &filepb.Text{
+					Fragments: []*filepb.TextFragment{
 						{
 							Annotation: "bold",
 							Text:       "some unicode text",
@@ -64,44 +64,44 @@ var exampleFile = &file.File{
 			},
 		},
 		{
-			Kind: &contentpb.Content_Link{
-				Link: &contentpb.Link{
+			Kind: &filepb.Content_Link{
+				Link: &filepb.Link{
 					Url:  "https://google.com",
 					Text: "link to url",
 				},
 			},
 		},
 		{
-			Kind: &contentpb.Content_Mention{
-				Mention: &contentpb.Mention{
+			Kind: &filepb.Content_Mention{
+				Mention: &filepb.Mention{
 					UserId: "my_user",
 				},
 			},
 		},
 		{
-			Kind: &contentpb.Content_Code{
-				Code: &contentpb.Code{
+			Kind: &filepb.Content_Code{
+				Code: &filepb.Code{
 					Text: "let a = 10",
 				},
 			},
 		},
 		{
-			Kind: &contentpb.Content_Equation{
-				Equation: &contentpb.Equation{
+			Kind: &filepb.Content_Equation{
+				Equation: &filepb.Equation{
 					Expression: "a + b",
 				},
 			},
 		},
 		{
-			Kind: &contentpb.Content_Image{
-				Image: &contentpb.Image{
+			Kind: &filepb.Content_Image{
+				Image: &filepb.Image{
 					Url: "https://domain.com/myimage",
 				},
 			},
 		},
 		{
-			Kind: &contentpb.Content_EmbeddedImage{
-				EmbeddedImage: &contentpb.EmbeddedImage{
+			Kind: &filepb.Content_EmbeddedImage{
+				EmbeddedImage: &filepb.EmbeddedImage{
 					Base64: "asdfasdfasdf",
 				},
 			},
