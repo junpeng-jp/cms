@@ -34,6 +34,8 @@ func (p *StorageCodec) Decode(b []byte) (*file.File, error) {
 		return nil, err
 	}
 
+	f.
+
 	return
 }
 
