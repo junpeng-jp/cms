@@ -18,7 +18,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-func (m *LayoutNode) MarshalVT() (dAtA []byte, err error) {
+func (m *SectionNode) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -31,12 +31,12 @@ func (m *LayoutNode) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *LayoutNode) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -60,15 +60,15 @@ func (m *LayoutNode) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *LayoutNode_Section) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_BlockContainers) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_Section) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_BlockContainers) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	if m.Section != nil {
-		size, err := m.Section.MarshalToSizedBufferVT(dAtA[:i])
+	if m.BlockContainers != nil {
+		size, err := m.BlockContainers.MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -81,12 +81,12 @@ func (m *LayoutNode_Section) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_HorizontalLayout) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_HorizontalLayout) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_HorizontalLayout) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_HorizontalLayout) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.HorizontalLayout != nil {
 		size, err := m.HorizontalLayout.MarshalToSizedBufferVT(dAtA[:i])
@@ -102,12 +102,12 @@ func (m *LayoutNode_HorizontalLayout) MarshalToSizedBufferVT(dAtA []byte) (int, 
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_ColumnLayout_1) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_1) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_ColumnLayout_1) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_1) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.ColumnLayout_1 != nil {
 		size, err := m.ColumnLayout_1.MarshalToSizedBufferVT(dAtA[:i])
@@ -123,12 +123,12 @@ func (m *LayoutNode_ColumnLayout_1) MarshalToSizedBufferVT(dAtA []byte) (int, er
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_ColumnLayout_2) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_2) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_ColumnLayout_2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.ColumnLayout_2 != nil {
 		size, err := m.ColumnLayout_2.MarshalToSizedBufferVT(dAtA[:i])
@@ -144,12 +144,12 @@ func (m *LayoutNode_ColumnLayout_2) MarshalToSizedBufferVT(dAtA []byte) (int, er
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_ColumnLayout_3) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_3) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_ColumnLayout_3) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_3) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.ColumnLayout_3 != nil {
 		size, err := m.ColumnLayout_3.MarshalToSizedBufferVT(dAtA[:i])
@@ -165,12 +165,12 @@ func (m *LayoutNode_ColumnLayout_3) MarshalToSizedBufferVT(dAtA []byte) (int, er
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_ColumnLayout_4) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_4) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_ColumnLayout_4) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_ColumnLayout_4) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.ColumnLayout_4 != nil {
 		size, err := m.ColumnLayout_4.MarshalToSizedBufferVT(dAtA[:i])
@@ -186,12 +186,12 @@ func (m *LayoutNode_ColumnLayout_4) MarshalToSizedBufferVT(dAtA []byte) (int, er
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_TableOfContentsBlock) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_TableOfContentsBlock) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_TableOfContentsBlock) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_TableOfContentsBlock) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.TableOfContentsBlock != nil {
 		size, err := m.TableOfContentsBlock.MarshalToSizedBufferVT(dAtA[:i])
@@ -207,12 +207,12 @@ func (m *LayoutNode_TableOfContentsBlock) MarshalToSizedBufferVT(dAtA []byte) (i
 	}
 	return len(dAtA) - i, nil
 }
-func (m *LayoutNode_BreadcrumbBlock) MarshalToVT(dAtA []byte) (int, error) {
+func (m *SectionNode_BreadcrumbBlock) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *LayoutNode_BreadcrumbBlock) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *SectionNode_BreadcrumbBlock) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.BreadcrumbBlock != nil {
 		size, err := m.BreadcrumbBlock.MarshalToSizedBufferVT(dAtA[:i])
@@ -228,7 +228,7 @@ func (m *LayoutNode_BreadcrumbBlock) MarshalToSizedBufferVT(dAtA []byte) (int, e
 	}
 	return len(dAtA) - i, nil
 }
-func (m *Section) MarshalVT() (dAtA []byte, err error) {
+func (m *BlockContainer) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -241,12 +241,12 @@ func (m *Section) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *Section) MarshalToVT(dAtA []byte) (int, error) {
+func (m *BlockContainer) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *Section) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *BlockContainer) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -305,9 +305,9 @@ func (m *HorizontalLayout) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Sections) > 0 {
-		for iNdEx := len(m.Sections) - 1; iNdEx >= 0; iNdEx-- {
-			size, err := m.Sections[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
+	if len(m.BlockContainers) > 0 {
+		for iNdEx := len(m.BlockContainers) - 1; iNdEx >= 0; iNdEx-- {
+			size, err := m.BlockContainers[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -352,8 +352,8 @@ func (m *ColumnLayout1) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.Section != nil {
-		size, err := m.Section.MarshalToSizedBufferVT(dAtA[:i])
+	if m.BlockContainer != nil {
+		size, err := m.BlockContainer.MarshalToSizedBufferVT(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -397,9 +397,9 @@ func (m *ColumnLayout2) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Sections) > 0 {
-		for iNdEx := len(m.Sections) - 1; iNdEx >= 0; iNdEx-- {
-			size, err := m.Sections[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
+	if len(m.BlockContainers) > 0 {
+		for iNdEx := len(m.BlockContainers) - 1; iNdEx >= 0; iNdEx-- {
+			size, err := m.BlockContainers[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -444,9 +444,9 @@ func (m *ColumnLayout3) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Sections) > 0 {
-		for iNdEx := len(m.Sections) - 1; iNdEx >= 0; iNdEx-- {
-			size, err := m.Sections[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
+	if len(m.BlockContainers) > 0 {
+		for iNdEx := len(m.BlockContainers) - 1; iNdEx >= 0; iNdEx-- {
+			size, err := m.BlockContainers[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -491,9 +491,9 @@ func (m *ColumnLayout4) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.Sections) > 0 {
-		for iNdEx := len(m.Sections) - 1; iNdEx >= 0; iNdEx-- {
-			size, err := m.Sections[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
+	if len(m.BlockContainers) > 0 {
+		for iNdEx := len(m.BlockContainers) - 1; iNdEx >= 0; iNdEx-- {
+			size, err := m.BlockContainers[iNdEx].MarshalToSizedBufferVT(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -1911,7 +1911,7 @@ func (m *Code) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *LayoutNode) SizeVT() (n int) {
+func (m *SectionNode) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1924,19 +1924,19 @@ func (m *LayoutNode) SizeVT() (n int) {
 	return n
 }
 
-func (m *LayoutNode_Section) SizeVT() (n int) {
+func (m *SectionNode_BlockContainers) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Section != nil {
-		l = m.Section.SizeVT()
+	if m.BlockContainers != nil {
+		l = m.BlockContainers.SizeVT()
 		n += 2 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	return n
 }
-func (m *LayoutNode_HorizontalLayout) SizeVT() (n int) {
+func (m *SectionNode_HorizontalLayout) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1948,7 +1948,7 @@ func (m *LayoutNode_HorizontalLayout) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *LayoutNode_ColumnLayout_1) SizeVT() (n int) {
+func (m *SectionNode_ColumnLayout_1) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1960,7 +1960,7 @@ func (m *LayoutNode_ColumnLayout_1) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *LayoutNode_ColumnLayout_2) SizeVT() (n int) {
+func (m *SectionNode_ColumnLayout_2) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1972,7 +1972,7 @@ func (m *LayoutNode_ColumnLayout_2) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *LayoutNode_ColumnLayout_3) SizeVT() (n int) {
+func (m *SectionNode_ColumnLayout_3) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1984,7 +1984,7 @@ func (m *LayoutNode_ColumnLayout_3) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *LayoutNode_ColumnLayout_4) SizeVT() (n int) {
+func (m *SectionNode_ColumnLayout_4) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1996,7 +1996,7 @@ func (m *LayoutNode_ColumnLayout_4) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *LayoutNode_TableOfContentsBlock) SizeVT() (n int) {
+func (m *SectionNode_TableOfContentsBlock) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2008,7 +2008,7 @@ func (m *LayoutNode_TableOfContentsBlock) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *LayoutNode_BreadcrumbBlock) SizeVT() (n int) {
+func (m *SectionNode_BreadcrumbBlock) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2020,7 +2020,7 @@ func (m *LayoutNode_BreadcrumbBlock) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *Section) SizeVT() (n int) {
+func (m *BlockContainer) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2042,8 +2042,8 @@ func (m *HorizontalLayout) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.Sections) > 0 {
-		for _, e := range m.Sections {
+	if len(m.BlockContainers) > 0 {
+		for _, e := range m.BlockContainers {
 			l = e.SizeVT()
 			n += 2 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
@@ -2058,8 +2058,8 @@ func (m *ColumnLayout1) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Section != nil {
-		l = m.Section.SizeVT()
+	if m.BlockContainer != nil {
+		l = m.BlockContainer.SizeVT()
 		n += 2 + l + protohelpers.SizeOfVarint(uint64(l))
 	}
 	n += len(m.unknownFields)
@@ -2072,8 +2072,8 @@ func (m *ColumnLayout2) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.Sections) > 0 {
-		for _, e := range m.Sections {
+	if len(m.BlockContainers) > 0 {
+		for _, e := range m.BlockContainers {
 			l = e.SizeVT()
 			n += 2 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
@@ -2088,8 +2088,8 @@ func (m *ColumnLayout3) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.Sections) > 0 {
-		for _, e := range m.Sections {
+	if len(m.BlockContainers) > 0 {
+		for _, e := range m.BlockContainers {
 			l = e.SizeVT()
 			n += 2 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
@@ -2104,8 +2104,8 @@ func (m *ColumnLayout4) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.Sections) > 0 {
-		for _, e := range m.Sections {
+	if len(m.BlockContainers) > 0 {
+		for _, e := range m.BlockContainers {
 			l = e.SizeVT()
 			n += 2 + l + protohelpers.SizeOfVarint(uint64(l))
 		}
@@ -2705,7 +2705,7 @@ func (m *Code) SizeVT() (n int) {
 	return n
 }
 
-func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
+func (m *SectionNode) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2728,15 +2728,15 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: LayoutNode: wiretype end group for non-group")
+			return fmt.Errorf("proto: SectionNode: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: LayoutNode: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: SectionNode: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 128:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Section", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockContainers", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2763,16 +2763,16 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_Section); ok {
-				if err := oneof.Section.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			if oneof, ok := m.Kind.(*SectionNode_BlockContainers); ok {
+				if err := oneof.BlockContainers.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
 			} else {
-				v := &Section{}
+				v := &BlockContainer{}
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_Section{Section: v}
+				m.Kind = &SectionNode_BlockContainers{BlockContainers: v}
 			}
 			iNdEx = postIndex
 		case 129:
@@ -2804,7 +2804,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_HorizontalLayout); ok {
+			if oneof, ok := m.Kind.(*SectionNode_HorizontalLayout); ok {
 				if err := oneof.HorizontalLayout.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2813,7 +2813,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_HorizontalLayout{HorizontalLayout: v}
+				m.Kind = &SectionNode_HorizontalLayout{HorizontalLayout: v}
 			}
 			iNdEx = postIndex
 		case 130:
@@ -2845,7 +2845,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_ColumnLayout_1); ok {
+			if oneof, ok := m.Kind.(*SectionNode_ColumnLayout_1); ok {
 				if err := oneof.ColumnLayout_1.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2854,7 +2854,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_ColumnLayout_1{ColumnLayout_1: v}
+				m.Kind = &SectionNode_ColumnLayout_1{ColumnLayout_1: v}
 			}
 			iNdEx = postIndex
 		case 131:
@@ -2886,7 +2886,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_ColumnLayout_2); ok {
+			if oneof, ok := m.Kind.(*SectionNode_ColumnLayout_2); ok {
 				if err := oneof.ColumnLayout_2.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2895,7 +2895,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_ColumnLayout_2{ColumnLayout_2: v}
+				m.Kind = &SectionNode_ColumnLayout_2{ColumnLayout_2: v}
 			}
 			iNdEx = postIndex
 		case 132:
@@ -2927,7 +2927,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_ColumnLayout_3); ok {
+			if oneof, ok := m.Kind.(*SectionNode_ColumnLayout_3); ok {
 				if err := oneof.ColumnLayout_3.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2936,7 +2936,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_ColumnLayout_3{ColumnLayout_3: v}
+				m.Kind = &SectionNode_ColumnLayout_3{ColumnLayout_3: v}
 			}
 			iNdEx = postIndex
 		case 133:
@@ -2968,7 +2968,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_ColumnLayout_4); ok {
+			if oneof, ok := m.Kind.(*SectionNode_ColumnLayout_4); ok {
 				if err := oneof.ColumnLayout_4.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2977,7 +2977,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_ColumnLayout_4{ColumnLayout_4: v}
+				m.Kind = &SectionNode_ColumnLayout_4{ColumnLayout_4: v}
 			}
 			iNdEx = postIndex
 		case 140:
@@ -3009,7 +3009,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_TableOfContentsBlock); ok {
+			if oneof, ok := m.Kind.(*SectionNode_TableOfContentsBlock); ok {
 				if err := oneof.TableOfContentsBlock.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -3018,7 +3018,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_TableOfContentsBlock{TableOfContentsBlock: v}
+				m.Kind = &SectionNode_TableOfContentsBlock{TableOfContentsBlock: v}
 			}
 			iNdEx = postIndex
 		case 141:
@@ -3050,7 +3050,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Kind.(*LayoutNode_BreadcrumbBlock); ok {
+			if oneof, ok := m.Kind.(*SectionNode_BreadcrumbBlock); ok {
 				if err := oneof.BreadcrumbBlock.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -3059,7 +3059,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Kind = &LayoutNode_BreadcrumbBlock{BreadcrumbBlock: v}
+				m.Kind = &SectionNode_BreadcrumbBlock{BreadcrumbBlock: v}
 			}
 			iNdEx = postIndex
 		default:
@@ -3084,7 +3084,7 @@ func (m *LayoutNode) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *Section) UnmarshalVT(dAtA []byte) error {
+func (m *BlockContainer) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3107,10 +3107,10 @@ func (m *Section) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: Section: wiretype end group for non-group")
+			return fmt.Errorf("proto: BlockContainer: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Section: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: BlockContainer: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 16:
@@ -3200,7 +3200,7 @@ func (m *HorizontalLayout) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 128:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sections", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockContainers", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3227,8 +3227,8 @@ func (m *HorizontalLayout) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sections = append(m.Sections, &Section{})
-			if err := m.Sections[len(m.Sections)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			m.BlockContainers = append(m.BlockContainers, &BlockContainer{})
+			if err := m.BlockContainers[len(m.BlockContainers)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3285,7 +3285,7 @@ func (m *ColumnLayout1) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 128:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Section", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockContainer", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3312,10 +3312,10 @@ func (m *ColumnLayout1) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Section == nil {
-				m.Section = &Section{}
+			if m.BlockContainer == nil {
+				m.BlockContainer = &BlockContainer{}
 			}
-			if err := m.Section.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.BlockContainer.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3372,7 +3372,7 @@ func (m *ColumnLayout2) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 128:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sections", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockContainers", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3399,8 +3399,8 @@ func (m *ColumnLayout2) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sections = append(m.Sections, &Section{})
-			if err := m.Sections[len(m.Sections)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			m.BlockContainers = append(m.BlockContainers, &BlockContainer{})
+			if err := m.BlockContainers[len(m.BlockContainers)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3457,7 +3457,7 @@ func (m *ColumnLayout3) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 128:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sections", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockContainers", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3484,8 +3484,8 @@ func (m *ColumnLayout3) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sections = append(m.Sections, &Section{})
-			if err := m.Sections[len(m.Sections)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			m.BlockContainers = append(m.BlockContainers, &BlockContainer{})
+			if err := m.BlockContainers[len(m.BlockContainers)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3542,7 +3542,7 @@ func (m *ColumnLayout4) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 128:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sections", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockContainers", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3569,8 +3569,8 @@ func (m *ColumnLayout4) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sections = append(m.Sections, &Section{})
-			if err := m.Sections[len(m.Sections)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+			m.BlockContainers = append(m.BlockContainers, &BlockContainer{})
+			if err := m.BlockContainers[len(m.BlockContainers)-1].UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

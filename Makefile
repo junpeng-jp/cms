@@ -10,7 +10,7 @@ SHELL := bash
 ## variables
 PROTO_PATH=$(shell cd .. && pwd)/protos
 NODE_PROTO=node.proto
-FILE_PROTO=file.proto
+METADATA_PROTO=metadata.proto
 
 GO_MODULE_PREFIX=github.com/junpeng-jp/blog
 GO_PB_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/filepb
@@ -26,15 +26,15 @@ gen-pb: ## generate the protobuf files used by the content
 	--go_out=. \
 	--go_opt=module=${GO_MODULE_PREFIX} \
 	--go_opt=M${NODE_PROTO}=${GO_PB_MODULE_PREFIX} \
-	--go_opt=M${FILE_PROTO}=${GO_PB_MODULE_PREFIX} \
+	--go_opt=M${METADATA_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_out=. \
 	--go-vtproto_opt=module=${GO_MODULE_PREFIX} \
 	--go-vtproto_opt=M${NODE_PROTO}=${GO_PB_MODULE_PREFIX} \
-	--go-vtproto_opt=M${FILE_PROTO}=${GO_PB_MODULE_PREFIX} \
+	--go-vtproto_opt=M${METADATA_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_opt=features=marshal+unmarshal+size \
 	--go-vtproto_opt=features=marshal+unmarshal+size \
 	--proto_path=${PROTO_PATH} \
-	${PROTO_PATH}/${FILE_PROTO} ${PROTO_PATH}/${NODE_PROTO} 
+	${PROTO_PATH}/${METADATA_PROTO} ${PROTO_PATH}/${NODE_PROTO} 
 
 ## checks
 .PHONY: format
