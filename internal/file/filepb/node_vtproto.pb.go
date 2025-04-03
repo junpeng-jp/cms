@@ -9,6 +9,7 @@ import (
 	protohelpers "github.com/planetscale/vtprotobuf/protohelpers"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	io "io"
+	sync "sync"
 )
 
 const (
@@ -1911,6 +1912,26 @@ func (m *Code) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+var vtprotoPool_SectionNode = sync.Pool{
+	New: func() interface{} {
+		return &SectionNode{}
+	},
+}
+
+func (m *SectionNode) ResetVT() {
+	if m != nil {
+		m.Reset()
+	}
+}
+func (m *SectionNode) ReturnToVTPool() {
+	if m != nil {
+		m.ResetVT()
+		vtprotoPool_SectionNode.Put(m)
+	}
+}
+func SectionNodeFromVTPool() *SectionNode {
+	return vtprotoPool_SectionNode.Get().(*SectionNode)
+}
 func (m *SectionNode) SizeVT() (n int) {
 	if m == nil {
 		return 0

@@ -75,13 +75,14 @@ func DecodeBlockFileFromBytes(src []byte) (BlockFile, error) {
 }
 
 type blockFileV1 struct {
-	content  [][]byte
-	images   [][]byte
+	content      [][]byte
+	images       [][]byte
+	sectionBytes [][]byte
+
 	sections []*filepb.SectionNode
 }
 
 func (f *blockFileV1) Encode() ([]byte, error) {
-
 	// heuristic to allocate an initial byte array size
 	var estSize int
 	for _, c := range f.content[:10] {
@@ -171,10 +172,5 @@ func (f *blockFileV1) DecodeImage(index int) ([]byte, error) {
 }
 
 func (f *blockFileV1) DecodeSection(index int) (*filepb.SectionNode, error) {
-	var section filepb.SectionNode
-	if err := section.UnmarshalVT(f.sections[index]); err != nil {
-		return nil, err
-	}
-
-	return &section, nil
+	return f.sections[index], nil
 }

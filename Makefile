@@ -31,8 +31,8 @@ gen-pb: ## generate the protobuf files used by the content
 	--go-vtproto_opt=module=${GO_MODULE_PREFIX} \
 	--go-vtproto_opt=M${NODE_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_opt=M${METADATA_PROTO}=${GO_PB_MODULE_PREFIX} \
-	--go-vtproto_opt=features=marshal+unmarshal+size \
-	--go-vtproto_opt=features=marshal+unmarshal+size \
+	--go-vtproto_opt=features=marshal+unmarshal+size+pool \
+	--go-vtproto_opt=pool=node.SectionNode \
 	--proto_path=${PROTO_PATH} \
 	${PROTO_PATH}/${METADATA_PROTO} ${PROTO_PATH}/${NODE_PROTO} 
 
