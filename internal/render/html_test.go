@@ -1,7 +1,6 @@
-package codecV1
+package render
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/junpeng.ong/blog/internal/filepb"
@@ -9,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCodecV1Idempotence(t *testing.T) {
+func TestHtmlTranscoder(t *testing.T) {
 	canonicalSection := &filepb.SectionNode{
 		Kind: &filepb.SectionNode_HorizontalLayout{
 			HorizontalLayout: &filepb.HorizontalLayout{
@@ -94,76 +93,13 @@ func TestCodecV1Idempotence(t *testing.T) {
 			},
 		},
 	}
-	canonicalContent := []byte("1123456789" + "2123456789" + "3123456789" + "fasd3472-_bbf===")
-	canonicalMetadata := &filepb.Metadata{
-		Version: 1,
-		Size:    int64(len(canonicalContent) + canonicalSection.SizeVT()),
-		ContentMetadata: &filepb.ByteRange{
-			Start: 0,
-			End:   int32(len(canonicalContent)),
-		},
-		SectionMetadata: &filepb.SectionMetadata{
-			Ranges: []*filepb.ByteRange{
-				{
-					Start: int32(len(canonicalContent)),
-					End:   int32(len(canonicalContent) + canonicalSection.SizeVT()),
-				},
-			},
-		},
-		FileMetadata: &filepb.FileMetadata{
-			Name:      "some name",
-			CreatedAt: 0,
-		},
+
+	bout := make([]byte, 64)
+	htmlTranscoder := HtmlTranscoder{
+		writer: &testutils.SeekableWriter{Buf: bout},
 	}
+	err := WalkSection(canonicalSection, &htmlTranscoder)
+	assert.NoError(t, err)
 
-	testCases := []struct {
-		name     string
-		offset   int
-		section  *filepb.SectionNode
-		content  []byte
-		metadata *filepb.Metadata
-	}{
-		{
-			name:     "no error: section encoded at offset 0",
-			offset:   0,
-			section:  canonicalSection,
-			content:  canonicalContent,
-			metadata: canonicalMetadata,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			writer := &testutils.SeekableWriter{Buf: make([]byte, 64)}
-
-			var err error
-
-			encoder := NewBlockFileEncoderV1(writer, tc.offset)
-			err = encoder.EncodeSectionContent(tc.section, tc.content)
-			assert.NoError(t, err)
-			_, err = encoder.Finalize()
-			assert.NoError(t, err)
-
-			metadata := &filepb.Metadata{
-				Version:         1,
-				Size:            int64(len(writer.Buf)),
-				ContentMetadata: encoder.GetFinalContentMetadata(),
-				SectionMetadata: encoder.GetFinalSectionMetadata(),
-				FileMetadata: &filepb.FileMetadata{
-					Name:      "some name",
-					CreatedAt: 0,
-				},
-			}
-
-			assert.Equal(t, tc.metadata, metadata)
-
-			reader := bytes.NewReader(writer.Buf)
-
-			decoder := NewBlockFileDecoderV1(reader, tc.metadata)
-			decoded, err := decoder.DecodeSection(tc.offset)
-			assert.NoError(t, err)
-
-			assert.Equal(t, tc.section, decoded)
-		})
-	}
+	t.Logf("%s", bout)
 }

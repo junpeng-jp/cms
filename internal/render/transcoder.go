@@ -1,133 +1,80 @@
 package render
 
 import (
-	"io"
-
 	"github.com/junpeng.ong/blog/internal/encoding"
 	"github.com/junpeng.ong/blog/internal/filepb"
 )
 
-type NodeHandler interface {
-	HandleBlockContainer(*filepb.BlockContainer) error
-	HandleHorizontalLayout(*filepb.HorizontalLayout) error
-	HandleColumnLayout1(*filepb.ColumnLayout1) error
-	HandleColumnLayout2(*filepb.ColumnLayout2) error
-	HandleColumnLayout3(*filepb.ColumnLayout3) error
-	HandleColumnLayout4(*filepb.ColumnLayout4) error
+type Transcoder interface {
+	ConvertSectionNodeBlockContainer(*filepb.BlockContainer) error
+	ConvertSectionNodeHorizontalLayout(*filepb.HorizontalLayout) error
+	ConvertSectionNodeColumnLayout1(*filepb.ColumnLayout1) error
+	ConvertSectionNodeColumnLayout2(*filepb.ColumnLayout2) error
+	ConvertSectionNodeColumnLayout3(*filepb.ColumnLayout3) error
+	ConvertSectionNodeColumnLayout4(*filepb.ColumnLayout4) error
+	ConvertBlockNodeParagraphBlock(*filepb.ParagraphBlock) error
+	ConvertBlockNodeDividerBlock(*filepb.DividerBlock) error
+	ConvertBlockNodeCodeBlock(*filepb.CodeBlock) error
+	ConvertBlockNodeListBlock(*filepb.ListBlock) error
+	ConvertBlockNodeTodoListBlock(*filepb.TodoListBlock) error
+	ConvertBlockNodeQuoteBlock(*filepb.QuoteBlock) error
+	ConvertInlineNodeText(*filepb.Text) error
+	ConvertInlineNodeImage(*filepb.Image) error
+	ConvertInlineNodeLink(*filepb.Link) error
+	ConvertInlineNodeMention(*filepb.Mention) error
+	ConvertInlineNodeEquation(*filepb.Equation) error
+	ConvertInlineNodeCode(*filepb.Code) error
+	ConvertInlineNodeCustomFormat(*filepb.CustomFormat) error
+	ConvertInlineNodeBold(*filepb.Bold) error
+	ConvertInlineNodeItalic(*filepb.Italic) error
+	ConvertInlineNodeUnderline(*filepb.Underline) error
+	ConvertInlineNodeStrikethrough(*filepb.Strikethrough) error
 }
 
-func TranscodeFileLazy(reader io.ReadSeeker, writer io.WriteSeeker) error {
-	decoder, err := encoding.NewBlockFileLazyDecoder(reader)
-	if err != nil {
-		return err
-	}
-
+func TranscodeFile(decoder encoding.BlockFileLazyDecoder, transcoder Transcoder) error {
 	for i := range decoder.Length() {
 		section, err := decoder.DecodeSection(i)
 		if err != nil {
 			return err
 		}
-
-		WalkSection(section, handler)
+		WalkSection(section, transcoder)
 	}
-
 	return nil
 }
 
-func WalkSection(section *filepb.SectionNode, handler NodeHandler) error {
+func WalkSection(section *filepb.SectionNode, transcoder Transcoder) error {
 	var err error
 	switch n := section.Kind.(type) {
 	case *filepb.SectionNode_BlockContainers:
-		err = handler.HandleBlockContainer(n.BlockContainers)
+		err = transcoder.ConvertSectionNodeBlockContainer(n.BlockContainers)
 		if err != nil {
 			return err
 		}
-		for i, block := range n.BlockContainers.GetBlocks() {
-			err = WalkBlockNode(block, handler)
-			if err != nil {
-				return err
-			}
-		}
 	case *filepb.SectionNode_HorizontalLayout:
-		err = handler.HandleHorizontalLayout(n.HorizontalLayout)
-		for i, block_container := range n.HorizontalLayout.GetBlockContainers() {
-			err = handler.HandleBlockContainer(block_container)
-			if err != nil {
-				return err
-			}
-			for j, block := range block_container.GetBlocks() {
-				err = WalkBlockNode(block, handler)
-				if err != nil {
-					return err
-				}
-			}
+		err = transcoder.ConvertSectionNodeHorizontalLayout(n.HorizontalLayout)
+		if err != nil {
+			return err
 		}
 
 	case *filepb.SectionNode_ColumnLayout_1:
-		err = handler.HandleColumnLayout1(n.ColumnLayout_1)
+		err = transcoder.ConvertSectionNodeColumnLayout1(n.ColumnLayout_1)
 		if err != nil {
 			return err
-		}
-		err = handler.HandleBlockContainer(n.ColumnLayout_1.BlockContainer)
-		if err != nil {
-			return err
-		}
-		for i, block := range n.ColumnLayout_1.BlockContainer.GetBlocks() {
-			err = WalkBlockNode(block, handler)
-			if err != nil {
-				return err
-			}
 		}
 	case *filepb.SectionNode_ColumnLayout_2:
-		err = handler.HandleColumnLayout2(n.ColumnLayout_2)
+		err = transcoder.ConvertSectionNodeColumnLayout2(n.ColumnLayout_2)
 		if err != nil {
 			return err
-		}
-		for i, block_container := range n.ColumnLayout_2.GetBlockContainers() {
-			err = handler.HandleBlockContainer(block_container)
-			if err != nil {
-				return err
-			}
-			for j, block := range block_container.GetBlocks() {
-				err = WalkBlockNode(block, handler)
-				if err != nil {
-					return err
-				}
-			}
 		}
 	case *filepb.SectionNode_ColumnLayout_3:
-		err = handler.HandleColumnLayout3(n.ColumnLayout_3)
+		err = transcoder.ConvertSectionNodeColumnLayout3(n.ColumnLayout_3)
 		if err != nil {
 			return err
-		}
-		for i, block_container := range n.ColumnLayout_3.GetBlockContainers() {
-			err = handler.HandleBlockContainer(block_container)
-			if err != nil {
-				return err
-			}
-			for j, block := range block_container.GetBlocks() {
-				err = WalkBlockNode(block, handler)
-				if err != nil {
-					return err
-				}
-			}
 		}
 	case *filepb.SectionNode_ColumnLayout_4:
-		err = handler.HandleColumnLayout4(n.ColumnLayout_4)
+		err = transcoder.ConvertSectionNodeColumnLayout4(n.ColumnLayout_4)
 		if err != nil {
 			return err
-		}
-		for i, block_container := range n.ColumnLayout_4.GetBlockContainers() {
-			err = handler.HandleBlockContainer(block_container)
-			if err != nil {
-				return err
-			}
-			for j, block := range block_container.GetBlocks() {
-				err = WalkBlockNode(block, handler)
-				if err != nil {
-					return err
-				}
-			}
 		}
 	default:
 
@@ -135,6 +82,101 @@ func WalkSection(section *filepb.SectionNode, handler NodeHandler) error {
 	return nil
 }
 
-func WalkBlockNode(block *filepb.BlockNode, handler NodeHandler) error {}
+func WalkBlockNode(block *filepb.BlockNode, transcoder Transcoder) error {
+	var err error
+	switch n := block.Kind.(type) {
+	case *filepb.BlockNode_ParagraphBlock:
+		err = transcoder.ConvertBlockNodeParagraphBlock(n.ParagraphBlock)
+		if err != nil {
+			return err
+		}
+	case *filepb.BlockNode_DividerBlock:
+		err = transcoder.ConvertBlockNodeDividerBlock(n.DividerBlock)
+		if err != nil {
+			return err
+		}
+	case *filepb.BlockNode_CodeBlock:
+		err = transcoder.ConvertBlockNodeCodeBlock(n.CodeBlock)
+		if err != nil {
+			return err
+		}
+	case *filepb.BlockNode_ListBlock:
+		err = transcoder.ConvertBlockNodeListBlock(n.ListBlock)
+		if err != nil {
+			return err
+		}
+	case *filepb.BlockNode_TodoListBlock:
+		err = transcoder.ConvertBlockNodeTodoListBlock(n.TodoListBlock)
+		if err != nil {
+			return err
+		}
+	case *filepb.BlockNode_QuoteBlock:
+		err = transcoder.ConvertBlockNodeQuoteBlock(n.QuoteBlock)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
-func WalkInlineNode(block *filepb.InlineNode, handler NodeHandler) error {}
+func WalkInlineNode(inline *filepb.InlineNode, transcoder Transcoder) error {
+	var err error
+	switch n := inline.Kind.(type) {
+	case *filepb.InlineNode_Text:
+		err = transcoder.ConvertInlineNodeText(n.Text)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Image:
+		err = transcoder.ConvertInlineNodeImage(n.Image)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Link:
+		err = transcoder.ConvertInlineNodeLink(n.Link)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Mention:
+		err = transcoder.ConvertInlineNodeMention(n.Mention)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Equation:
+		err = transcoder.ConvertInlineNodeEquation(n.Equation)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Code:
+		err = transcoder.ConvertInlineNodeCode(n.Code)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_CustomFormat:
+		err = transcoder.ConvertInlineNodeCustomFormat(n.CustomFormat)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Bold:
+		err = transcoder.ConvertInlineNodeBold(n.Bold)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Italic:
+		err = transcoder.ConvertInlineNodeItalic(n.Italic)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Underline:
+		err = transcoder.ConvertInlineNodeUnderline(n.Underline)
+		if err != nil {
+			return err
+		}
+	case *filepb.InlineNode_Strikethrough:
+		err = transcoder.ConvertInlineNodeStrikethrough(n.Strikethrough)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
