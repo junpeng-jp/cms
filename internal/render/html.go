@@ -10,6 +10,10 @@ type HtmlTranscoder struct {
 	writer io.Writer
 }
 
+func NewHtmlTranscoder(writer io.Writer) *HtmlTranscoder {
+	return &HtmlTranscoder{writer: writer}
+}
+
 func (t *HtmlTranscoder) ConvertSectionNodeBlockContainer(node *filepb.BlockContainer) error {
 	t.writer.Write([]byte("<container>\n"))
 	for _, block := range node.Blocks {

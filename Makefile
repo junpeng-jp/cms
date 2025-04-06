@@ -54,6 +54,10 @@ test: ## run unit tests
 build:
 	go build -ldflags="-s -w" -o build/toolkit cmd/toolkit/*.go
 
+.PHONY: build-wasm
+build-wasm:
+	GOOS=wasip1 GOARCH=wasm go build -ldflags="-s -w" -o build/decoder.wasm cmd/wasm/main.go
+
 .PHONY: build-protoc-gen-tinygo
 build-protoc-gen-tinygo:
 	go build -ldflags="-s -w" -o build/protoc-gen-tinygo cmd/protoc-gen-tinygo/main.go

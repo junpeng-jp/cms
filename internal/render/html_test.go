@@ -3,8 +3,8 @@ package render
 import (
 	"testing"
 
+	"github.com/junpeng.ong/blog/internal/encoding/utils"
 	"github.com/junpeng.ong/blog/internal/filepb"
-	"github.com/junpeng.ong/blog/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -96,7 +96,7 @@ func TestHtmlTranscoder(t *testing.T) {
 
 	bout := make([]byte, 64)
 	htmlTranscoder := HtmlTranscoder{
-		writer: &testutils.SeekableWriter{Buf: bout},
+		writer: utils.NewSeekableWriter(bout),
 	}
 	err := WalkSection(canonicalSection, &htmlTranscoder)
 	assert.NoError(t, err)

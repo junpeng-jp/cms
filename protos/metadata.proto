@@ -4,9 +4,8 @@ package metadata;
 
 message Metadata {
   int32 version = 1;
-  int64 size = 2;
-  ByteRange content_metadata = 3;
   // space for other kinds of content
+  ByteRange content_metadata = 13;
   SectionMetadata section_metadata = 14;
   FileMetadata file_metadata = 15;
 }

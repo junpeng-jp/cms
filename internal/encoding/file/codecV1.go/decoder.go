@@ -6,7 +6,7 @@ import (
 	"io"
 	"unicode/utf8"
 
-	"github.com/junpeng.ong/blog/internal/encoding/file/utils"
+	"github.com/junpeng.ong/blog/internal/encoding/utils"
 	"github.com/junpeng.ong/blog/internal/filepb"
 )
 

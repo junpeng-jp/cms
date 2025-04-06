@@ -1,11 +1,14 @@
 package codecV1
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
+	"time"
 
-	"github.com/junpeng.ong/blog/internal/encoding/file/utils"
+	"github.com/junpeng.ong/blog/internal/encoding/common"
+	"github.com/junpeng.ong/blog/internal/encoding/utils"
 	"github.com/junpeng.ong/blog/internal/filepb"
 )
 
@@ -27,42 +30,34 @@ var (
 )
 
 type blockFileEncoderV1 struct {
-	writer        io.WriteSeeker
+	writer        io.Writer
+	pos           int
 	contentStart  int
-	offset        int
+	initialized   bool
 	finalized     bool
 	sections      []*filepb.SectionNode
 	sectionRanges []*filepb.ByteRange
 }
 
-func NewBlockFileEncoderV1(writer io.WriteSeeker, initialOffset int) *blockFileEncoderV1 {
+func NewBlockFileEncoderV1(writer io.Writer) *blockFileEncoderV1 {
 	return &blockFileEncoderV1{
 		writer:        writer,
-		contentStart:  initialOffset,
-		offset:        initialOffset,
+		pos:           0,
+		contentStart:  0,
+		initialized:   false,
 		finalized:     false,
 		sections:      nil,
 		sectionRanges: nil,
 	}
 }
-
-func (e *blockFileEncoderV1) GetFinalContentMetadata() *filepb.ByteRange {
-	if !e.finalized {
-		return nil
+func (e *blockFileEncoderV1) Init() error {
+	_, err := utils.WriteFromCurrentPosition(e.writer, []byte(common.FileMarker), common.FileMarkerSize)
+	if err != nil {
+		return err
 	}
-
-	return &filepb.ByteRange{
-		Start: int32(e.contentStart),
-		End:   int32(e.sectionRanges[0].Start),
-	}
-}
-
-func (e *blockFileEncoderV1) GetFinalSectionMetadata() *filepb.SectionMetadata {
-	if !e.finalized {
-		return nil
-	}
-
-	return &filepb.SectionMetadata{Ranges: e.sectionRanges}
+	e.contentStart = common.FileMarkerSize
+	e.pos = common.FileMarkerSize
+	return nil
 }
 
 func (e *blockFileEncoderV1) EncodeSectionImage(section *filepb.SectionNode, base64Bytes []byte) error {
@@ -76,12 +71,12 @@ func (e *blockFileEncoderV1) EncodeSectionImage(section *filepb.SectionNode, bas
 	}
 
 	n := len(base64Bytes)
-	_, err = utils.WriteFromStartOffset(e.writer, base64Bytes, e.offset, n)
+	_, err = utils.WriteFromCurrentPosition(e.writer, base64Bytes, n)
 	if err != nil {
 		return fmt.Errorf("%w: %v", ErrorFailedToWriteContent, err)
 	}
 	e.sections = append(e.sections, section)
-	e.offset += n
+	e.pos += n
 
 	return nil
 }
@@ -92,12 +87,12 @@ func (e *blockFileEncoderV1) EncodeSectionContent(section *filepb.SectionNode, c
 		return err
 	}
 	n := len(content)
-	_, err = utils.WriteFromStartOffset(e.writer, content, e.offset, n)
+	_, err = utils.WriteFromCurrentPosition(e.writer, content, n)
 	if err != nil {
 		return fmt.Errorf("%w: %v", ErrorFailedToWriteContent, err)
 	}
 	e.sections = append(e.sections, section)
-	e.offset += n
+	e.pos += n
 
 	return nil
 }
@@ -106,8 +101,8 @@ func (e *blockFileEncoderV1) checkContentBeforeWrite(contentSize int) error {
 	if e.finalized {
 		return ErrorAttemptToEncodeAfterEncoderHasFinalized
 	}
-	if contentSize > v1MaxContentTotalSize-e.offset {
-		return fmt.Errorf("%w: max content size is %db: attempted to write %db + %db", ErrorContentTooLarge, v1MaxContentTotalSize, e.offset, contentSize)
+	if contentSize > v1MaxContentTotalSize-e.pos {
+		return fmt.Errorf("%w: max content size is %db: attempted to write %db + %db", ErrorContentTooLarge, v1MaxContentTotalSize, e.pos, contentSize)
 
 	}
 	if contentSize > v1MaxContentChunkSize {
@@ -116,18 +111,23 @@ func (e *blockFileEncoderV1) checkContentBeforeWrite(contentSize int) error {
 	return nil
 }
 
-func (e *blockFileEncoderV1) Finalize() (int, error) {
+func (e *blockFileEncoderV1) Finalize(filename string) (int, error) {
 
 	buffer := make([]byte, v1InitialEncoderBufferSize)
 
-	offset := e.offset
+	pos := e.pos
+	contentMetadata := &filepb.ByteRange{
+		Start: int32(e.contentStart),
+		End:   int32(pos),
+	}
+
+	var b []byte
+	var err error
+	var n, size int
+	var sectionRanges []*filepb.ByteRange
 
 	if len(e.sections) > 0 {
-		var b []byte
-		var err error
-		var n, size int
-
-		sectionRanges := make([]*filepb.ByteRange, len(e.sections))
+		sectionRanges = make([]*filepb.ByteRange, len(e.sections))
 
 		for i, section := range e.sections {
 			size = section.SizeVT()
@@ -137,27 +137,70 @@ func (e *blockFileEncoderV1) Finalize() (int, error) {
 			b = buffer[:size]
 			n, err = section.MarshalToSizedBufferVT(b)
 			if err != nil {
-				return 0, fmt.Errorf("%w: %v", ErrorFailedToEncodeSection, err)
+				return pos + n, fmt.Errorf("%w: %v", ErrorFailedToEncodeSection, err)
 			}
 			if n != size {
-				return 0, ErrorPartialEncodingOfSection
+				return pos + n, ErrorPartialEncodingOfSection
 			}
-			_, err = utils.WriteFromStartOffset(e.writer, b, offset, size)
+			n, err = utils.WriteFromCurrentPosition(e.writer, b, size)
 			if err != nil {
-				return 0, fmt.Errorf("%w: %v", ErrorFailedToWriteSection, err)
+				return pos + n, fmt.Errorf("%w: %v", ErrorFailedToWriteSection, err)
 			}
 			sectionRanges[i] = &filepb.ByteRange{
-				Start: int32(offset),
-				End:   int32(offset + size),
+				Start: int32(pos),
+				End:   int32(pos + size),
 			}
-			offset += size
+			pos += size
 		}
+	}
+	// write metadata
+	metadata := &filepb.Metadata{
+		Version:         1,
+		ContentMetadata: contentMetadata,
+		SectionMetadata: &filepb.SectionMetadata{
+			Ranges: sectionRanges,
+		},
+		FileMetadata: &filepb.FileMetadata{
+			Name:      filename,
+			CreatedAt: time.Now().UnixMilli(),
+		},
+	}
+	size = metadata.SizeVT()
+	if len(buffer) < size {
+		buffer = make([]byte, size)
+	}
+	b = buffer[:size]
+	n, err = metadata.MarshalToSizedBufferVT(b)
+	if err != nil {
+		return pos + n, fmt.Errorf("%w: %v", ErrorFailedToEncodeSection, err)
+	}
+	n, err = utils.WriteFromCurrentPosition(e.writer, b, size)
+	if err != nil {
+		return pos + n, fmt.Errorf("%w: %v", ErrorFailedToWriteSection, err)
+	}
+	pos += size
 
-		e.sectionRanges = sectionRanges
+	// write metadata size
+	b = buffer[:common.FooterLengthByteSize]
+	binary.LittleEndian.PutUint32(b, uint32(size))
+
+	n, err = utils.WriteFromCurrentPosition(e.writer, b, common.FooterLengthByteSize)
+	if err != nil {
+		return pos + n, fmt.Errorf("%w: %v", ErrorFailedToWriteSection, err)
 	}
 
-	e.offset = offset
+	pos += common.FooterLengthByteSize
+
+	// write final file marker
+	n, err = utils.WriteFromCurrentPosition(e.writer, []byte(common.FileMarker), common.FileMarkerSize)
+	if err != nil {
+		return pos + n, err
+	}
+
+	pos += common.FileMarkerSize
+
+	e.pos = pos
 	e.finalized = true
 
-	return offset - e.contentStart, nil
+	return pos, nil
 }

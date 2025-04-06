@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/junpeng.ong/blog/internal/encoding/common"
+	"github.com/junpeng.ong/blog/internal/encoding/utils"
 	"github.com/junpeng.ong/blog/internal/filepb"
-	"github.com/junpeng.ong/blog/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -97,16 +98,15 @@ func TestCodecV1Idempotence(t *testing.T) {
 	canonicalContent := []byte("1123456789" + "2123456789" + "3123456789" + "fasd3472-_bbf===")
 	canonicalMetadata := &filepb.Metadata{
 		Version: 1,
-		Size:    int64(len(canonicalContent) + canonicalSection.SizeVT()),
 		ContentMetadata: &filepb.ByteRange{
-			Start: 0,
-			End:   int32(len(canonicalContent)),
+			Start: common.FileMarkerSize,
+			End:   common.FileMarkerSize + int32(len(canonicalContent)),
 		},
 		SectionMetadata: &filepb.SectionMetadata{
 			Ranges: []*filepb.ByteRange{
 				{
-					Start: int32(len(canonicalContent)),
-					End:   int32(len(canonicalContent) + canonicalSection.SizeVT()),
+					Start: common.FileMarkerSize + int32(len(canonicalContent)),
+					End:   common.FileMarkerSize + int32(len(canonicalContent)+canonicalSection.SizeVT()),
 				},
 			},
 		},
@@ -134,30 +134,29 @@ func TestCodecV1Idempotence(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			writer := &testutils.SeekableWriter{Buf: make([]byte, 64)}
+			writer := utils.NewSeekableWriter(make([]byte, 64))
 
 			var err error
 
-			encoder := NewBlockFileEncoderV1(writer, tc.offset)
+			encoder := NewBlockFileEncoderV1(writer)
+			err = encoder.Init()
+			assert.NoError(t, err)
 			err = encoder.EncodeSectionContent(tc.section, tc.content)
 			assert.NoError(t, err)
-			_, err = encoder.Finalize()
+			_, err = encoder.Finalize("some name")
 			assert.NoError(t, err)
 
-			metadata := &filepb.Metadata{
-				Version:         1,
-				Size:            int64(len(writer.Buf)),
-				ContentMetadata: encoder.GetFinalContentMetadata(),
-				SectionMetadata: encoder.GetFinalSectionMetadata(),
-				FileMetadata: &filepb.FileMetadata{
-					Name:      "some name",
-					CreatedAt: 0,
-				},
-			}
+			t.Logf("%s", writer.GetBuffer())
+			t.Logf("size: %d", len(writer.GetBuffer()))
 
+			reader := bytes.NewReader(writer.GetBuffer())
+
+			err = common.VerifyFileMarkers(reader)
+			assert.NoError(t, err)
+			_, metadata, err := common.DecodeMetadata(reader)
+			assert.NoError(t, err)
+			metadata.FileMetadata.CreatedAt = 0
 			assert.Equal(t, tc.metadata, metadata)
-
-			reader := bytes.NewReader(writer.Buf)
 
 			decoder := NewBlockFileDecoderV1(reader, tc.metadata)
 			decoded, err := decoder.DecodeSection(tc.offset)

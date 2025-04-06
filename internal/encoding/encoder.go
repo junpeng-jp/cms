@@ -8,13 +8,12 @@ import (
 )
 
 type BlockFileEncoder interface {
-	GetFinalContentMetadata() *filepb.ByteRange
-	GetFinalSectionMetadata() *filepb.SectionMetadata
+	Init() error
 	EncodeSectionImage(*filepb.SectionNode, []byte) error
 	EncodeSectionContent(*filepb.SectionNode, []byte) error
-	Finalize() (int, error)
+	Finalize(string) (int, error)
 }
 
-func NewBlockFileEncoder(writer io.WriteSeeker) (BlockFileEncoder, error) {
-	return codecV1.NewBlockFileEncoderV1(writer, fileMarkerSize), nil
+func NewBlockFileEncoder(writer io.Writer) (BlockFileEncoder, error) {
+	return codecV1.NewBlockFileEncoderV1(writer), nil
 }
