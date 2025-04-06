@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(
 		newMarkdownCommand(),
-		newFileComand(),
+		// newFileComand(),
 	)
 }
 

@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package node;
+
+import "github.com/planetscale/vtprotobuf/vtproto/ext.proto";
+
+// -----------------------------------
+// Section Nodes are top level nodes
+// -----------------------------------
+message SectionNode {
+  option (vtproto.ignore_unknown_fields) = true;
+  oneof kind {
+    // Section is a terminal node that transitions to Semantic Nodes
+    BlockContainer block_containers = 128;
+    HorizontalLayout horizontal_layout = 129;
+    ColumnLayout1 column_layout_1 = 130;
+    ColumnLayout2 column_layout_2 = 131;
+    ColumnLayout3 column_layout_3 = 132;
+    ColumnLayout4 column_layout_4 = 133;
+  }
+}
+
+message BlockContainer { repeated BlockNode blocks = 16; }
+message HorizontalLayout { repeated BlockContainer block_containers = 128; }
+message ColumnLayout1 { BlockContainer block_container = 128; }
+message ColumnLayout2 { repeated BlockContainer block_containers = 128; }
+message ColumnLayout3 { repeated BlockContainer block_containers = 128; }
+message ColumnLayout4 { repeated BlockContainer block_containers = 128; }
+
+// -----------------------------------
+// BlockNode represent semantic grouping of content
+// -----------------------------------
+message BlockNode {
+  option (vtproto.ignore_unknown_fields) = true;
+  oneof kind {
+    // Terminal Blocks
+    ParagraphBlock paragraph_block = 17;
+    DividerBlock divider_block = 18;
+    CodeBlock code_block = 19;
+    // Container Blocks
+    ListBlock list_block = 65;
+    TodoListBlock todo_list_block = 66;
+    QuoteBlock quote_block = 67;
+  }
+  reserved 64; // ListItem
+}
+
+// Terminal Blocks
+message ParagraphBlock { repeated InlineNode inline = 1; }
+message DividerBlock {}
+message CodeBlock {
+  Text text = 2;
+  uint32 language = 15;
+}
+// Container blocks
+message ListItem { repeated BlockNode block = 16; }
+message ListBlock {
+  uint32 style = 15;
+  repeated ListItem list_items = 64;
+}
+message TodoListBlock { repeated ListItem list_items = 65; }
+message QuoteBlock { repeated BlockNode block = 16; }
+message HeaderBlock {
+  repeated InlineNode header = 1;
+  repeated BlockNode body = 16;
+}
+
+// -----------------------------------
+// InlineNode represent line content
+// -----------------------------------
+message InlineNode {
+  option (vtproto.ignore_unknown_fields) = true;
+  oneof kind {
+    Text text = 2;
+    Image image = 3;
+    Link link = 4;
+    Mention mention = 5;
+    Equation equation = 6;
+    Code code = 7;
+    CustomFormat custom_format = 8;
+    Bold bold = 9;
+    Italic italic = 10;
+    Underline underline = 11;
+    Strikethrough strikethrough = 12;
+  }
+  reserved 1;  // InlineNode
+  reserved 15; // any enums
+}
+message Bold { repeated InlineNode inline = 1; }
+message Italic { repeated InlineNode inline = 1; }
+message Underline { repeated InlineNode inline = 1; }
+message Strikethrough { repeated InlineNode inline = 1; }
+
+message CustomFormat {
+  repeated InlineNode inline = 1;
+  uint32 format = 15;
+}
+
+// Terminal Nodes
+message Text {
+  uint32 start = 1;
+  uint32 end = 2;
+}
+
+message Image {
+  uint32 start = 1;
+  uint32 end = 2;
+}
+
+message Link {
+  uint32 start = 1;
+  uint32 end = 2;
+  string url = 3;
+}
+
+message Mention {
+  uint32 start = 1;
+  uint32 end = 2;
+  string user = 3;
+}
+
+message Equation {
+  uint32 start = 1;
+  uint32 end = 2;
+  string kind = 3;
+}
+
+message Code {
+  uint32 start = 1;
+  uint32 end = 2;
+  string language = 3;
+}

@@ -8,12 +8,12 @@ SHELL := bash
 .DELETE_ON_ERROR:
 
 ## variables
-PROTO_PATH=$(shell cd .. && pwd)/protos
+PROTO_PATH=./protos
 NODE_PROTO=node.proto
 METADATA_PROTO=metadata.proto
 
 GO_MODULE_PREFIX=github.com/junpeng-jp/blog
-GO_PB_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/file/filepb
+GO_PB_MODULE_PREFIX=${GO_MODULE_PREFIX}/internal/filepb
 
 .PHONY: help
 help:  ## print help message
@@ -23,6 +23,8 @@ help:  ## print help message
 .PHONY: gen-pb
 gen-pb: ## generate the protobuf files used by the content
 	protoc \
+	--proto_path=${PROTO_PATH} \
+	--proto_path=$(shell go env GOPATH)/src/github.com/planetscale/vtprotobuf/include \
 	--go_out=. \
 	--go_opt=module=${GO_MODULE_PREFIX} \
 	--go_opt=M${NODE_PROTO}=${GO_PB_MODULE_PREFIX} \
@@ -32,8 +34,6 @@ gen-pb: ## generate the protobuf files used by the content
 	--go-vtproto_opt=M${NODE_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_opt=M${METADATA_PROTO}=${GO_PB_MODULE_PREFIX} \
 	--go-vtproto_opt=features=marshal+unmarshal+size+pool \
-	--go-vtproto_opt=pool=node.SectionNode \
-	--proto_path=${PROTO_PATH} \
 	${PROTO_PATH}/${METADATA_PROTO} ${PROTO_PATH}/${NODE_PROTO} 
 
 ## checks

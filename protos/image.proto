@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package content;
+
+message Image { string url = 1; }
+
+message EmbeddedImage { string base64 = 1; }
