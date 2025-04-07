@@ -146,10 +146,10 @@ func TestCodecV1Idempotence(t *testing.T) {
 			_, err = encoder.Finalize("some name")
 			assert.NoError(t, err)
 
-			t.Logf("%s", writer.GetBuffer())
-			t.Logf("size: %d", len(writer.GetBuffer()))
+			t.Logf("%s", writer.Bytes())
+			t.Logf("size: %d", len(writer.Bytes()))
 
-			reader := bytes.NewReader(writer.GetBuffer())
+			reader := bytes.NewReader(writer.Bytes())
 
 			err = common.VerifyFileMarkers(reader)
 			assert.NoError(t, err)

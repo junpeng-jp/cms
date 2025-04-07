@@ -15,13 +15,13 @@ func NewSeekableWriter(buf []byte) *SeekableWriter {
 	return &SeekableWriter{buf: buf, pos: 0}
 }
 
-func (m *SeekableWriter) GetBuffer() []byte {
+func (m *SeekableWriter) Bytes() []byte {
 	return m.buf[:m.pos]
 }
 
 func (m *SeekableWriter) Write(p []byte) (n int, err error) {
 	if len(p) > cap(m.buf)-m.pos {
-		m.buf = append(m.buf, make([]byte, len(p))...)[:m.pos]
+		m.buf = append(m.buf, make([]byte, len(p))...)
 	}
 	m.buf = m.buf[:m.pos+len(p)]
 	n = copy(m.buf[m.pos:], p)

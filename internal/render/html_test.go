@@ -1,10 +1,12 @@
 package render
 
 import (
+	"bytes"
+	"fmt"
 	"testing"
 
-	"github.com/junpeng.ong/blog/internal/encoding/utils"
 	"github.com/junpeng.ong/blog/internal/filepb"
+	"github.com/junpeng.ong/blog/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,8 +46,8 @@ func TestHtmlTranscoder(t *testing.T) {
 																				},
 																			},
 																			{
-																				Kind: &filepb.InlineNode_Underline{
-																					Underline: &filepb.Underline{
+																				Kind: &filepb.InlineNode_Italic{
+																					Italic: &filepb.Italic{
 																						Inline: []*filepb.InlineNode{
 																							{
 																								Kind: &filepb.InlineNode_Text{
@@ -87,6 +89,70 @@ func TestHtmlTranscoder(t *testing.T) {
 									},
 								},
 							},
+							{
+								Kind: &filepb.BlockNode_ParagraphBlock{
+									ParagraphBlock: &filepb.ParagraphBlock{
+										Inline: []*filepb.InlineNode{
+											{
+												Kind: &filepb.InlineNode_Bold{
+													Bold: &filepb.Bold{
+														Inline: []*filepb.InlineNode{
+															{
+																Kind: &filepb.InlineNode_Underline{
+																	Underline: &filepb.Underline{
+																		Inline: []*filepb.InlineNode{
+																			{
+																				Kind: &filepb.InlineNode_Text{
+																					Text: &filepb.Text{
+																						Start: 0,
+																						End:   10,
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+															{
+																Kind: &filepb.InlineNode_Underline{
+																	Underline: &filepb.Underline{
+																		Inline: []*filepb.InlineNode{
+																			{
+																				Kind: &filepb.InlineNode_Text{
+																					Text: &filepb.Text{
+																						Start: 10,
+																						End:   20,
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+															{
+																Kind: &filepb.InlineNode_Text{
+																	Text: &filepb.Text{
+																		Start: 20,
+																		End:   30,
+																	},
+																},
+															},
+															{
+																Kind: &filepb.InlineNode_Image{
+																	Image: &filepb.Image{
+																		Start: 30,
+																		End:   46,
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -94,12 +160,13 @@ func TestHtmlTranscoder(t *testing.T) {
 		},
 	}
 
-	bout := make([]byte, 64)
+	bout := bytes.NewBuffer(make([]byte, 64))
 	htmlTranscoder := HtmlTranscoder{
-		writer: utils.NewSeekableWriter(bout),
+		decoder: testutils.NewMockDecoder(46),
+		writer:  bout,
 	}
-	err := WalkSection(canonicalSection, &htmlTranscoder)
+	err := WalkSection(canonicalSection, &htmlTranscoder, 0)
 	assert.NoError(t, err)
 
-	t.Logf("%s", bout)
+	fmt.Printf("\n%s\n", bout.Bytes())
 }
