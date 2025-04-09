@@ -21,7 +21,9 @@ message SectionNode {
 }
 
 message BlockContainer { repeated BlockNode blocks = 16; }
-message HorizontalLayout { repeated BlockContainer block_containers = 128; }
+message HorizontalLayout {
+  repeated BlockContainer block_containers = 128;
+} // might need some sort of global header
 message ColumnLayout1 { BlockContainer block_container = 128; }
 message ColumnLayout2 { repeated BlockContainer block_containers = 128; }
 message ColumnLayout3 { repeated BlockContainer block_containers = 128; }

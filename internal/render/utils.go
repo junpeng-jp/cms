@@ -11,9 +11,12 @@ const (
 	tagImage      = "img"
 	tagBlockquote = "blockquote"
 	tagParagraph  = "p"
-	tagUnderline  = "u"
-	tagItalic     = "i"
-	tagBold       = "b"
+	// inline formatting
+	tagSpan          = "span"
+	tagUnderline     = "u"
+	tagItalic        = "i"
+	tagBold          = "b"
+	tagStrikethrough = "s"
 )
 
 func writeOpeningTag(writer io.Writer, tag string, depth int, annotations ...string) (n int, err error) {

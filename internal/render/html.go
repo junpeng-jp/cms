@@ -29,16 +29,16 @@ func (t *HtmlTranscoder) ConvertSectionNodeBlockContainer(node *filepb.BlockCont
 	// }
 	var n int
 	for _, block := range node.Blocks {
-		n, err = writeOpeningTag(t.writer, tagDiv, depth+1, createClassAnnotation("block"))
+		n, err = writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("block"))
 		t.pos += n
 		if err != nil {
 			return err
 		}
-		err := WalkBlockNode(block, t, depth+2)
+		err := WalkBlockNode(block, t, depth+1)
 		if err != nil {
 			return err
 		}
-		n, err = writeClosingTag(t.writer, tagDiv, depth+1)
+		n, err = writeClosingTag(t.writer, tagDiv, depth)
 		t.pos += n
 		if err != nil {
 			return err
@@ -275,8 +275,22 @@ func (t *HtmlTranscoder) ConvertInlineNodeCode(node *filepb.Code, depth int) (er
 }
 
 func (t *HtmlTranscoder) ConvertInlineNodeCustomFormat(node *filepb.CustomFormat, depth int) (err error) {
-	t.writer.Write([]byte("<custom>"))
-	t.writer.Write([]byte("</custom>"))
+	n, err := writeOpeningTag(t.writer, tagSpan, depth)
+	t.pos += n
+	if err != nil {
+		return err
+	}
+	for _, inlineNode := range node.GetInline() {
+		err := WalkInlineNode(inlineNode, t, depth+1)
+		if err != nil {
+			return nil
+		}
+	}
+	n, err = writeClosingTag(t.writer, tagSpan, depth)
+	t.pos += n
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -341,7 +355,21 @@ func (t *HtmlTranscoder) ConvertInlineNodeUnderline(node *filepb.Underline, dept
 }
 
 func (t *HtmlTranscoder) ConvertInlineNodeStrikethrough(node *filepb.Strikethrough, depth int) (err error) {
-	t.writer.Write([]byte("<s>"))
-	t.writer.Write([]byte("</s>"))
+	n, err := writeOpeningTag(t.writer, tagUnderline, depth)
+	t.pos += n
+	if err != nil {
+		return err
+	}
+	for _, inlineNode := range node.GetInline() {
+		err := WalkInlineNode(inlineNode, t, depth+1)
+		if err != nil {
+			return nil
+		}
+	}
+	n, err = writeClosingTag(t.writer, tagUnderline, depth)
+	t.pos += n
+	if err != nil {
+		return err
+	}
 	return nil
 }

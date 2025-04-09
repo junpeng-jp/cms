@@ -49,6 +49,11 @@ lint: ## run lint on staged changes
 test: ## run unit tests
 	echo "TODO: gotest"
 
+## build
+.PHONY: build-css
+build-css:
+	./scripts/tailwindcss -i build/dev.css -o build/styles.css --watch --minify
+
 ## productionise
 .PHONY: build
 build:
