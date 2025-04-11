@@ -7,38 +7,25 @@ import "github.com/planetscale/vtprotobuf/vtproto/ext.proto";
 // -----------------------------------
 // Section Nodes are top level nodes
 // -----------------------------------
-message SectionNode {
-  option (vtproto.ignore_unknown_fields) = true;
-  oneof kind {
-    // Section is a terminal node that transitions to Semantic Nodes
-    BlockContainer block_containers = 128;
-    HorizontalLayout horizontal_layout = 129;
-    ColumnLayout1 column_layout_1 = 130;
-    ColumnLayout2 column_layout_2 = 131;
-    ColumnLayout3 column_layout_3 = 132;
-    ColumnLayout4 column_layout_4 = 133;
-  }
-}
-
-message BlockContainer { repeated BlockNode blocks = 16; }
-message HorizontalLayout {
-  repeated BlockContainer block_containers = 128;
-} // might need some sort of global header
-message ColumnLayout1 { BlockContainer block_container = 128; }
-message ColumnLayout2 { repeated BlockContainer block_containers = 128; }
-message ColumnLayout3 { repeated BlockContainer block_containers = 128; }
-message ColumnLayout4 { repeated BlockContainer block_containers = 128; }
+message SectionNode { repeated LayoutAndBlockNode children = 1; }
 
 // -----------------------------------
 // BlockNode represent semantic grouping of content
 // -----------------------------------
-message BlockNode {
+message LayoutAndBlockNode {
   option (vtproto.ignore_unknown_fields) = true;
   oneof kind {
+    // Section is a terminal node that transitions to Semantic Nodes
+    BlockContainer block_containers = 17;
+    HorizontalLayout horizontal_layout = 18;
+    ColumnLayout1 column_layout_1 = 19;
+    ColumnLayout2 column_layout_2 = 20;
+    ColumnLayout3 column_layout_3 = 21;
+    ColumnLayout4 column_layout_4 = 22;
     // Terminal Blocks
-    ParagraphBlock paragraph_block = 17;
-    DividerBlock divider_block = 18;
-    CodeBlock code_block = 19;
+    ParagraphBlock paragraph_block = 32;
+    DividerBlock divider_block = 33;
+    CodeBlock code_block = 34;
     // Container Blocks
     ListBlock list_block = 65;
     TodoListBlock todo_list_block = 66;
@@ -46,6 +33,30 @@ message BlockNode {
   }
   reserved 64; // ListItem
 }
+
+message BlockNode {
+  option (vtproto.ignore_unknown_fields) = true;
+  oneof kind {
+    // Terminal Blocks
+    ParagraphBlock paragraph_block = 32;
+    DividerBlock divider_block = 33;
+    CodeBlock code_block = 34;
+    // Container Blocks
+    ListBlock list_block = 65;
+    TodoListBlock todo_list_block = 66;
+    QuoteBlock quote_block = 67;
+  }
+  reserved 64; // ListItem
+}
+
+message BlockContainer { repeated BlockNode blocks = 16; }
+message HorizontalLayout {
+  repeated BlockContainer block_containers = 17;
+} // might need some sort of global header
+message ColumnLayout1 { BlockContainer block_container = 17; }
+message ColumnLayout2 { repeated BlockContainer block_containers = 17; }
+message ColumnLayout3 { repeated BlockContainer block_containers = 17; }
+message ColumnLayout4 { repeated BlockContainer block_containers = 17; }
 
 // Terminal Blocks
 message ParagraphBlock { repeated InlineNode inline = 1; }
@@ -60,7 +71,7 @@ message ListBlock {
   uint32 style = 15;
   repeated ListItem list_items = 64;
 }
-message TodoListBlock { repeated ListItem list_items = 65; }
+message TodoListBlock { repeated ListItem list_items = 64; }
 message QuoteBlock { repeated BlockNode block = 16; }
 message HeaderBlock {
   repeated InlineNode header = 1;

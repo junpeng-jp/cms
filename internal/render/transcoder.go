@@ -6,12 +6,12 @@ import (
 )
 
 type Transcoder interface {
-	ConvertSectionNodeBlockContainer(*filepb.BlockContainer, int) error
-	ConvertSectionNodeHorizontalLayout(*filepb.HorizontalLayout, int) error
-	ConvertSectionNodeColumnLayout1(*filepb.ColumnLayout1, int) error
-	ConvertSectionNodeColumnLayout2(*filepb.ColumnLayout2, int) error
-	ConvertSectionNodeColumnLayout3(*filepb.ColumnLayout3, int) error
-	ConvertSectionNodeColumnLayout4(*filepb.ColumnLayout4, int) error
+	ConvertLayoutNodeBlockContainer(*filepb.BlockContainer, int) error
+	ConvertLayoutNodeHorizontalLayout(*filepb.HorizontalLayout, int) error
+	ConvertLayoutNodeColumnLayout1(*filepb.ColumnLayout1, int) error
+	ConvertLayoutNodeColumnLayout2(*filepb.ColumnLayout2, int) error
+	ConvertLayoutNodeColumnLayout3(*filepb.ColumnLayout3, int) error
+	ConvertLayoutNodeColumnLayout4(*filepb.ColumnLayout4, int) error
 	ConvertBlockNodeParagraphBlock(*filepb.ParagraphBlock, int) error
 	ConvertBlockNodeDividerBlock(*filepb.DividerBlock, int) error
 	ConvertBlockNodeCodeBlock(*filepb.CodeBlock, int) error
@@ -44,39 +44,70 @@ func TranscodeFile(decoder encoding.BlockFileLazyDecoder, transcoder Transcoder)
 
 func WalkSection(section *filepb.SectionNode, transcoder Transcoder, depth int) error {
 	var err error
-	switch n := section.Kind.(type) {
-	case *filepb.SectionNode_BlockContainers:
-		err = transcoder.ConvertSectionNodeBlockContainer(n.BlockContainers, depth)
-		if err != nil {
-			return err
+	for _, blocks := range section.Children {
+		switch n := blocks.Kind.(type) {
+		case *filepb.LayoutAndBlockNode_BlockContainers:
+			err = transcoder.ConvertLayoutNodeBlockContainer(n.BlockContainers, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_HorizontalLayout:
+			err = transcoder.ConvertLayoutNodeHorizontalLayout(n.HorizontalLayout, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_ColumnLayout_1:
+			err = transcoder.ConvertLayoutNodeColumnLayout1(n.ColumnLayout_1, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_ColumnLayout_2:
+			err = transcoder.ConvertLayoutNodeColumnLayout2(n.ColumnLayout_2, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_ColumnLayout_3:
+			err = transcoder.ConvertLayoutNodeColumnLayout3(n.ColumnLayout_3, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_ColumnLayout_4:
+			err = transcoder.ConvertLayoutNodeColumnLayout4(n.ColumnLayout_4, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_ParagraphBlock:
+			err = transcoder.ConvertBlockNodeParagraphBlock(n.ParagraphBlock, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_DividerBlock:
+			err = transcoder.ConvertBlockNodeDividerBlock(n.DividerBlock, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_CodeBlock:
+			err = transcoder.ConvertBlockNodeCodeBlock(n.CodeBlock, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_ListBlock:
+			err = transcoder.ConvertBlockNodeListBlock(n.ListBlock, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_TodoListBlock:
+			err = transcoder.ConvertBlockNodeTodoListBlock(n.TodoListBlock, depth)
+			if err != nil {
+				return err
+			}
+		case *filepb.LayoutAndBlockNode_QuoteBlock:
+			err = transcoder.ConvertBlockNodeQuoteBlock(n.QuoteBlock, depth)
+			if err != nil {
+				return err
+			}
+		default:
 		}
-	case *filepb.SectionNode_HorizontalLayout:
-		err = transcoder.ConvertSectionNodeHorizontalLayout(n.HorizontalLayout, depth)
-		if err != nil {
-			return err
-		}
-	case *filepb.SectionNode_ColumnLayout_1:
-		err = transcoder.ConvertSectionNodeColumnLayout1(n.ColumnLayout_1, depth)
-		if err != nil {
-			return err
-		}
-	case *filepb.SectionNode_ColumnLayout_2:
-		err = transcoder.ConvertSectionNodeColumnLayout2(n.ColumnLayout_2, depth)
-		if err != nil {
-			return err
-		}
-	case *filepb.SectionNode_ColumnLayout_3:
-		err = transcoder.ConvertSectionNodeColumnLayout3(n.ColumnLayout_3, depth)
-		if err != nil {
-			return err
-		}
-	case *filepb.SectionNode_ColumnLayout_4:
-		err = transcoder.ConvertSectionNodeColumnLayout4(n.ColumnLayout_4, depth)
-		if err != nil {
-			return err
-		}
-	default:
-
 	}
 	return nil
 }
@@ -114,6 +145,7 @@ func WalkBlockNode(block *filepb.BlockNode, transcoder Transcoder, depth int) er
 		if err != nil {
 			return err
 		}
+	default:
 	}
 	return nil
 }
@@ -176,6 +208,7 @@ func WalkInlineNode(inline *filepb.InlineNode, transcoder Transcoder, depth int)
 		if err != nil {
 			return err
 		}
+	default:
 	}
 	return nil
 }

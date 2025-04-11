@@ -21,7 +21,7 @@ func NewHtmlTranscoder(writer io.Writer) *HtmlTranscoder {
 	return &HtmlTranscoder{writer: writer}
 }
 
-func (t *HtmlTranscoder) ConvertSectionNodeBlockContainer(node *filepb.BlockContainer, depth int) (err error) {
+func (t *HtmlTranscoder) ConvertLayoutNodeBlockContainer(node *filepb.BlockContainer, depth int) (err error) {
 	// n, err := writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("col"))
 	// t.pos += n
 	// if err != nil {
@@ -52,14 +52,14 @@ func (t *HtmlTranscoder) ConvertSectionNodeBlockContainer(node *filepb.BlockCont
 	return nil
 }
 
-func (t *HtmlTranscoder) ConvertSectionNodeHorizontalLayout(node *filepb.HorizontalLayout, depth int) (err error) {
+func (t *HtmlTranscoder) ConvertLayoutNodeHorizontalLayout(node *filepb.HorizontalLayout, depth int) (err error) {
 	n, err := writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("row"))
 	t.pos += n
 	if err != nil {
 		return err
 	}
 	for _, blockContainer := range node.GetBlockContainers() {
-		err := t.ConvertSectionNodeBlockContainer(blockContainer, depth+1)
+		err := t.ConvertLayoutNodeBlockContainer(blockContainer, depth+1)
 		if err != nil {
 			return nil
 		}
@@ -72,13 +72,13 @@ func (t *HtmlTranscoder) ConvertSectionNodeHorizontalLayout(node *filepb.Horizon
 	return nil
 }
 
-func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout1(node *filepb.ColumnLayout1, depth int) (err error) {
+func (t *HtmlTranscoder) ConvertLayoutNodeColumnLayout1(node *filepb.ColumnLayout1, depth int) (err error) {
 	n, err := writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("col"))
 	t.pos += n
 	if err != nil {
 		return err
 	}
-	err = t.ConvertSectionNodeBlockContainer(node.GetBlockContainer(), depth+1)
+	err = t.ConvertLayoutNodeBlockContainer(node.GetBlockContainer(), depth+1)
 	if err != nil {
 		return nil
 	}
@@ -90,14 +90,14 @@ func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout1(node *filepb.ColumnLayo
 	return nil
 }
 
-func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout2(node *filepb.ColumnLayout2, depth int) (err error) {
+func (t *HtmlTranscoder) ConvertLayoutNodeColumnLayout2(node *filepb.ColumnLayout2, depth int) (err error) {
 	n, err := writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("col"))
 	t.pos += n
 	if err != nil {
 		return err
 	}
 	for _, blockContainer := range node.GetBlockContainers() {
-		err := t.ConvertSectionNodeBlockContainer(blockContainer, depth+1)
+		err := t.ConvertLayoutNodeBlockContainer(blockContainer, depth+1)
 		if err != nil {
 			return nil
 		}
@@ -110,14 +110,14 @@ func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout2(node *filepb.ColumnLayo
 	return nil
 }
 
-func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout3(node *filepb.ColumnLayout3, depth int) (err error) {
+func (t *HtmlTranscoder) ConvertLayoutNodeColumnLayout3(node *filepb.ColumnLayout3, depth int) (err error) {
 	n, err := writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("col"))
 	t.pos += n
 	if err != nil {
 		return err
 	}
 	for _, blockContainer := range node.GetBlockContainers() {
-		err := t.ConvertSectionNodeBlockContainer(blockContainer, depth+1)
+		err := t.ConvertLayoutNodeBlockContainer(blockContainer, depth+1)
 		if err != nil {
 			return nil
 		}
@@ -130,14 +130,14 @@ func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout3(node *filepb.ColumnLayo
 	return nil
 }
 
-func (t *HtmlTranscoder) ConvertSectionNodeColumnLayout4(node *filepb.ColumnLayout4, depth int) (err error) {
+func (t *HtmlTranscoder) ConvertLayoutNodeColumnLayout4(node *filepb.ColumnLayout4, depth int) (err error) {
 	n, err := writeOpeningTag(t.writer, tagDiv, depth, createClassAnnotation("col"))
 	t.pos += n
 	if err != nil {
 		return err
 	}
 	for _, blockContainer := range node.GetBlockContainers() {
-		err := t.ConvertSectionNodeBlockContainer(blockContainer, depth+1)
+		err := t.ConvertLayoutNodeBlockContainer(blockContainer, depth+1)
 		if err != nil {
 			return nil
 		}
